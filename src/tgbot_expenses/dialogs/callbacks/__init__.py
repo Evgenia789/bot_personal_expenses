@@ -1,0 +1,12 @@
+from src.tgbot_expenses.dialogs.callbacks import (add_bill, back,
+                                                           bill, category,
+                                                           category_limit,
+                                                           change_bill,
+                                                           change_limit,
+                                                           confirmation,
+                                                           delete_bill,
+                                                           main_menu,
+                                                           remove_bill,
+                                                           settings,
+                                                           start_or_continue,
+                                                           statistics)
