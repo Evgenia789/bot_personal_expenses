@@ -1,4 +1,3 @@
-import os
 import asyncio
 
 from aiogram import types
@@ -6,9 +5,9 @@ from aiogram.dispatcher.handler import CancelHandler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
 from src.tgbot_expenses.bot import Bot
-from dotenv import load_dotenv
+from src.tgbot_expenses.config import load_config
 
-load_dotenv()
+config = load_config("bot.ini")
 
 
 class StartOrContinueMiddleware(BaseMiddleware):
@@ -17,11 +16,11 @@ class StartOrContinueMiddleware(BaseMiddleware):
         """
         On pre process messages
         """
-        # if str(message.from_id) not in os.getenv("ALLOWED_IDS"):
-        #     message = await message.answer("Sorry, this bot is not available to you 😔")
-        #     await asyncio.sleep(2)
-        #     await Bot.delete_messages(message.chat.id, message.message_id, 2)
-        #     raise CancelHandler()
+        if message.from_id not in config.ids:
+            message = await message.answer("Sorry, this bot is not available to you 😔")
+            await asyncio.sleep(2)
+            await Bot.delete_messages(message.chat.id, message.message_id, 2)
+            raise CancelHandler()
 
         current_state = await Bot.get_current_state()
 
