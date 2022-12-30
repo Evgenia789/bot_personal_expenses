@@ -6,8 +6,6 @@ from aiogram.dispatcher import FSMContext
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.database.db import database
-from src.tgbot_expenses.dialogs.callbacks.start_or_continue import (
-    callbacks_continue, callbacks_start_over)
 from src.tgbot_expenses.dialogs.commands.start import send_welcome
 from src.tgbot_expenses.states.states_chat import StateChat
 from src.tgbot_expenses.utils.chart_and_statistics import get_statistics_and_chart
@@ -17,9 +15,10 @@ from src.tgbot_expenses.utils.chart_and_statistics import get_statistics_and_cha
 async def callbacks_confirmation_data(query: types.CallbackQuery,
                                       state: FSMContext) -> None:
     """
-    Process confirmation button
+    Data confirmation process
     """
-    await Bot.delete_message(query.message.chat.id, query.message.message_id-1)
+    await Bot.delete_message(chat_id=query.message.chat.id,
+                             message_id= query.message.message_id-1)
     
     if query.data == "Confirm":
         await query.message.delete()
@@ -31,12 +30,13 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
 
         await get_statistics_and_chart(query.message)
 
-        message = await query.message.answer(QuestionText.last_message)
+        last_message = await Bot.answer(message=query.message,
+                                        text=QuestionText.last_message)
 
         await asyncio.sleep(2)
 
-        await message.delete()
+        await last_message.delete()
     else:
-        await send_welcome(query.message, state)
+        await send_welcome(message=query.message, state=state)
 
     await state.reset_state()

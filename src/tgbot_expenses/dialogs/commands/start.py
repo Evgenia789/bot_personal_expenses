@@ -18,7 +18,7 @@ async def send_welcome(message: aiogram.types.Message, state: FSMContext) -> Non
     await StateChat.MainMenu.set()
 
     await Bot.answer(
-        message,
-        QuestionText.main_menu,
+        message=message,
+        text=QuestionText.main_menu,
         reply_markup=str(get_keyboard_main_menu())
     )

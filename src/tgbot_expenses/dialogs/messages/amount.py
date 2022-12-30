@@ -3,8 +3,6 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import ButtonText, QuestionText
-from src.tgbot_expenses.dialogs.callbacks.start_or_continue import (
-    callbacks_continue, callbacks_start_over)
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
 from src.tgbot_expenses.helpers.keyboards.question import \
@@ -17,10 +15,12 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
     Process a message about the amount of expenses.
     """
-    await Bot.delete_messages(message.chat.id, message.message_id, 2)
+    await Bot.delete_messages(chat_id=message.chat.id,
+                              last_message_id=message.message_id, count=2)
+
     if not message.text.isdigit():
         await StateChat.next()
-        await message_invalid_amount(message, state)
+        await message_invalid_amount(message=message, state=state)
     else:
         async with state.proxy() as data:
             data["amount"] = int(message.text)
@@ -29,9 +29,13 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
             amount = data["amount"]
 
         await StateChat.DataConfirmation.set()
-        await Bot.answer(message, f"Category: {category} \nBill: {bill} \nAmount: {amount}")
-        await Bot.answer(
-            message,
-            QuestionText.confirmation,
-            reply_markup=get_keyboard_question(ButtonText.confirmation)
-        )
+
+        await Bot.answer(message=message,
+                         text=(
+                            f"<b>Category:</b> {category} \n"
+                            f"<b>Bill:</b> {bill}\n"
+                            f"<b>Amount:</b> {amount}\n\n"
+                         ) + QuestionText.confirmation,
+                         reply_markup=get_keyboard_question(
+                            button_names=ButtonText.confirmation
+                         ))

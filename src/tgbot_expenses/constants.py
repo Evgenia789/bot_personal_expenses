@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class ButtonText:
     main_menu = "View statistics;Make expenses;Settings"
-    confirmation = "Confirm;Cancel"#
+    confirmation = "Confirm;Cancel"
 
 
 @dataclass
@@ -21,3 +21,4 @@ class QuestionText:
     archive_bill = "Choose the bill you want to delete"
     result_archive = "The bill archived"
     warning_number = "You need to enter a number!"
+    start = "You are in the process of entering expenses"

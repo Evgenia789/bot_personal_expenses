@@ -3,16 +3,14 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.dialogs.callbacks.start_or_continue import (
-    callbacks_continue, callbacks_start_over)
 from src.tgbot_expenses.states.states_chat import StateChat
 
 
 @Bot.callback_query_handler(state=StateChat.Bill)
-async def callbacks_bill(query: types.CallbackQuery,
+async def callbacks_get_bill(query: types.CallbackQuery,
                          state: FSMContext) -> None:
     """
-    Process bill button.
+    The process of selecting a bill.
     """
     await query.message.delete()
 
@@ -21,4 +19,4 @@ async def callbacks_bill(query: types.CallbackQuery,
 
     await StateChat.next()
 
-    await Bot.answer(query.message, QuestionText.amount)
+    await Bot.answer(message=query.message, text=QuestionText.amount)

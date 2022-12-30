@@ -4,8 +4,6 @@ from aiogram.dispatcher import FSMContext
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.database.db import database
-from src.tgbot_expenses.dialogs.callbacks.start_or_continue import (
-    callbacks_continue, callbacks_start_over)
 from src.tgbot_expenses.helpers.keyboards.question import \
     get_keyboard_question
 from src.tgbot_expenses.helpers.keyboards.settings import \
@@ -22,7 +20,7 @@ from src.tgbot_expenses.states.states_chat import StateChat
 async def callbacks_back(query: types.CallbackQuery,
                          state: FSMContext) -> None:
     """
-    Process back button.
+    The process of going back.
     """
     await query.message.delete()
 
@@ -30,7 +28,7 @@ async def callbacks_back(query: types.CallbackQuery,
     current_state_name = current_state.split(":")[-1]    
 
     if current_state_name == "Category":
-        await StateChat.previous()
+        await StateChat.MainMenu.set()
         question = QuestionText.main_menu
         keyboard = str(get_keyboard_main_menu())
     else:
@@ -52,7 +50,7 @@ async def callbacks_back(query: types.CallbackQuery,
                 await StateSettings.ChangeBill.set()
 
     await Bot.answer(
-        query.message,
+        message=query.message,
         text=question,
         reply_markup=str(keyboard)
     )

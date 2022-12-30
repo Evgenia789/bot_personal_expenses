@@ -30,5 +30,8 @@ def load_config(path: str):
         tg_bot=TgBot(
             token=tg_bot.get("TELEGRAM_TOKEN")
         ),
-        ids=ids.values()
+        ids=AllowedIds(
+            id_1=ids.getint("ID_1"),
+            id_2=ids.getint("ID_2")
+        )
     )

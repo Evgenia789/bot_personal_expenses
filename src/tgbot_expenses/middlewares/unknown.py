@@ -16,7 +16,8 @@ class UnknownMiddleware(BaseMiddleware):
         current_state = await Bot.get_current_state()
 
         if current_state is None or (
-            current_state.split(":")[-1] in ["Amount", "InvalidAmount", "NewLimit", "AddBill"]
+            current_state.split(":")[-1] in ["Amount", "InvalidAmount",
+                                             "NewLimit", "AddBill"]
         ):
             return None
 
