@@ -14,7 +14,8 @@ from src.tgbot_expenses.states.states_settings import StateSettings
 @Bot.message_handler(state=[StateChat.InvalidAmount,
                             StateSettings.InvalidAmount],
                      content_types=types.ContentType.ANY)
-async def message_invalid_amount(message: types.Message, state: FSMContext) -> None:
+async def message_invalid_amount(message: types.Message,
+                                 state: FSMContext) -> None:
     """
     Process a message about an invalid expense amount format.
     """
@@ -45,4 +46,3 @@ async def message_invalid_amount(message: types.Message, state: FSMContext) -> N
                 main_menu_button=False
             ))
         )
-    

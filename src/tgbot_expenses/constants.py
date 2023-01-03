@@ -13,7 +13,8 @@ class QuestionText:
     category = "Choose a category where your expenses belong"
     bill = "Choose which account to write off expenses from"
     amount = "Enter the amount of expenses"
-    confirmation = "Confirm the entered data or click the 'Cancel' button to start over"
+    confirmation = ("Confirm the entered data or click the "
+                    "'Cancel' button to start over")
     last_message = "Data added!"
     limits = "Choose category to change the limit"
     bills = "Do you want to add or delete?"

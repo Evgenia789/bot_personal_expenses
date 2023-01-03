@@ -10,7 +10,8 @@ from src.tgbot_expenses.config import load_config
 
 class AuthorizationMiddleware(BaseMiddleware):
     """Authorization middleware"""
-    async def on_pre_process_message(self, message: types.Message, data: dict) -> None:
+    async def on_pre_process_message(self, message: types.Message,
+                                     data: dict) -> None:
         """
         On pre process messages
         """

@@ -4,8 +4,7 @@ from aiogram.dispatcher import FSMContext
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.database.db import database
-from src.tgbot_expenses.helpers.keyboards.question import \
-    get_keyboard_question
+from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.states.states_settings import StateSettings
 
 
@@ -18,7 +17,7 @@ async def callbacks_get_bill_for_deletting(query: types.CallbackQuery,
     await query.message.delete()
 
     await StateSettings.DeleteBill.set()
-    
+
     await Bot.answer(
         message=query.message,
         text=QuestionText.archive_bill,

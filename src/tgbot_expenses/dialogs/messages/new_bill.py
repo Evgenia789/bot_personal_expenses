@@ -9,8 +9,10 @@ from src.tgbot_expenses.dialogs.commands.start import send_welcome
 from src.tgbot_expenses.states.states_settings import StateSettings
 
 
-@Bot.message_handler(state=StateSettings.AddBill, content_types=types.ContentType.ANY)
-async def message_input_new_bill(message: types.Message, state: FSMContext) -> None:
+@Bot.message_handler(state=StateSettings.AddBill,
+                     content_types=types.ContentType.ANY)
+async def message_input_new_bill(message: types.Message,
+                                 state: FSMContext) -> None:
     """
     Process of input a new bill.
     """

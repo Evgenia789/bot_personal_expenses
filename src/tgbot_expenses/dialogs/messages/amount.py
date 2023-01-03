@@ -5,12 +5,12 @@ from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import ButtonText, QuestionText
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
-from src.tgbot_expenses.helpers.keyboards.question import \
-    get_keyboard_question
+from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.states.states_chat import StateChat
 
 
-@Bot.message_handler(state=StateChat.Amount, content_types=types.ContentType.ANY)
+@Bot.message_handler(state=StateChat.Amount,
+                     content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
     Process a message about the amount of expenses.

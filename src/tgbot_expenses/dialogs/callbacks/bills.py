@@ -8,7 +8,7 @@ from src.tgbot_expenses.states.states_chat import StateChat
 
 @Bot.callback_query_handler(state=StateChat.Bill)
 async def callbacks_get_bill(query: types.CallbackQuery,
-                         state: FSMContext) -> None:
+                             state: FSMContext) -> None:
     """
     The process of selecting a bill.
     """

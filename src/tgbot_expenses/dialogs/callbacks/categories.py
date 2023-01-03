@@ -4,14 +4,13 @@ from aiogram.dispatcher import FSMContext
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.database.db import database
-from src.tgbot_expenses.helpers.keyboards.question import \
-    get_keyboard_question
+from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.states.states_chat import StateChat
 
 
 @Bot.callback_query_handler(state=StateChat.Category)
 async def callbacks_get_category(query: types.CallbackQuery,
-                             state: FSMContext) -> None:
+                                 state: FSMContext) -> None:
     """
     The process of selecting a category.
     """
@@ -21,7 +20,7 @@ async def callbacks_get_category(query: types.CallbackQuery,
         data["category"] = query.data
 
     await StateChat.next()
-    
+
     await Bot.answer(
         message=query.message,
         text=QuestionText.bill,

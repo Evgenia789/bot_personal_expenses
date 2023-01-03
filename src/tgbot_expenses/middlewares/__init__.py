@@ -1,3 +1,5 @@
-from .start_or_continue import *
-from .unknown import *
-from .authorization import *
+from src.tgbot_expenses.middlewares.authorization import \
+    AuthorizationMiddleware
+from src.tgbot_expenses.middlewares.start_or_continue import \
+    StartOrContinueMiddleware
+from src.tgbot_expenses.middlewares.unknown import UnknownMiddleware

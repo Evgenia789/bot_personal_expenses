@@ -9,7 +9,8 @@ from src.tgbot_expenses.states.states_chat import StateChat
 
 
 @Bot.message_handler(commands=["start"], state="*")
-async def send_welcome(message: aiogram.types.Message, state: FSMContext) -> None:
+async def send_welcome(message: aiogram.types.Message,
+                       state: FSMContext) -> None:
     """
     Start command handler
     """

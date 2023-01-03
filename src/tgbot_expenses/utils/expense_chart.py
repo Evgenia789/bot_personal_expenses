@@ -18,7 +18,6 @@ async def get_chart(data: List[Tuple]) -> str:
     ax1.pie(amount, labels=categories)
     ax1.axis('equal')
     ax1.set_title(label=f"Expenses for {datetime.now().strftime('%B')}",
-                  fontweight ="bold", pad=20)
+                  fontweight="bold", pad=20)
     plt.savefig(path_to_chart)
     return path_to_chart
-

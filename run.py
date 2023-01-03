@@ -3,9 +3,9 @@ import logging
 import os
 
 from aiogram.utils import executor
-from src.tgbot_expenses.config import load_config
 
 from src.tgbot_expenses.bot import Bot
+from src.tgbot_expenses.config import load_config
 from src.tgbot_expenses.middlewares import (AuthorizationMiddleware,
                                             StartOrContinueMiddleware,
                                             UnknownMiddleware)
@@ -19,6 +19,7 @@ bot = Bot(config.tg_bot.token)
 Bot.dispatch.middleware.setup(StartOrContinueMiddleware())
 Bot.dispatch.middleware.setup(UnknownMiddleware())
 Bot.dispatch.middleware.setup(AuthorizationMiddleware())
+
 
 def main():
     logging.basicConfig(

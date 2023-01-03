@@ -3,7 +3,7 @@ import os
 
 def loadModules(name: str, cur_dir: str):
     """Process of loading modules"""
-    new_path = f"{cur_dir}\\tgbot_expenses\{name}"
+    new_path = f"{cur_dir}\\tgbot_expenses\\{name}"
     res = {}
     # check subfolders
     lst = os.listdir(new_path)

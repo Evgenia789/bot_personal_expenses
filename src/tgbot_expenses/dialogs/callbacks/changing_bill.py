@@ -17,7 +17,7 @@ async def callbacks_change_bill(query: types.CallbackQuery,
     await query.message.delete()
 
     await StateSettings.ChangeBill.set()
-        
+
     await Bot.answer(
         message=query.message,
         text=QuestionText.bills,

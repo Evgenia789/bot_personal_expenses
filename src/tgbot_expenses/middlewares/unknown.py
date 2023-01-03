@@ -9,7 +9,8 @@ from src.tgbot_expenses.bot import Bot
 
 class UnknownMiddleware(BaseMiddleware):
     """Unknown middleware"""
-    async def on_pre_process_message(self, message: types.Message, data: dict) -> None:
+    async def on_pre_process_message(self, message: types.Message,
+                                     data: dict) -> None:
         """
         On pre process messages
         """
@@ -31,7 +32,7 @@ class UnknownMiddleware(BaseMiddleware):
 
         await sleep(2)
         await message.delete()
-        await new_message.delete() 
+        await new_message.delete()
 
         raise CancelHandler()
 

@@ -17,7 +17,7 @@ async def callbacks_add_new_bill(query: types.CallbackQuery,
     await query.message.delete()
 
     await StateSettings.AddBill.set()
-        
+
     await Bot.answer(
         message=query.message,
         text=QuestionText.new_bill,

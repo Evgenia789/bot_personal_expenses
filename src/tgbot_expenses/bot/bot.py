@@ -1,32 +1,22 @@
-
 from contextlib import suppress
-from datetime import datetime
-from email import message
-from typing import List, Union
 
 import aiogram
 from aiogram import Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
-from aiogram.utils import exceptions
-from aiogram.utils.exceptions import (MessageCantBeDeleted,
-                                      MessageToDeleteNotFound)
+from aiogram.utils.exceptions import (BotBlocked, ChatNotFound,
+                                      MessageCantBeDeleted,
+                                      MessageToDeleteNotFound,
+                                      TelegramAPIError, UserDeactivated)
 
 
 async def send_answer(message: types.Message, *args, **kwargs) -> bool:
     """
     Send answer to user
     """
-    try:
+    with suppress(BotBlocked, ChatNotFound,
+                  UserDeactivated, TelegramAPIError):
         res = await message.answer(**kwargs)
-    except exceptions.BotBlocked:
-        err_str = "BotBlocked"
-    except exceptions.ChatNotFound:
-        err_str = "ChatNotFound"
-    except exceptions.UserDeactivated:
-        err_str = "UserDeactivated"
-    except exceptions.TelegramAPIError:
-        err_str = "TelegramAPIError"
 
     return res
 
@@ -40,7 +30,6 @@ class Bot:
         """
         Create singleton instance of Telegram Bot
         """
-        
         if not cls.__instance:
             cls.__instance = super(Bot, cls).__new__(cls, *args, **kwargs)
         return cls.__instance
@@ -52,9 +41,10 @@ class Bot:
         """
         if token is not None:
             self.bot = aiogram.Bot(token=token, parse_mode=parse_mode)
-            self.dispatch = aiogram.Dispatcher(bot=self.bot, storage=MemoryStorage())
+            self.dispatch = aiogram.Dispatcher(bot=self.bot,
+                                               storage=MemoryStorage())
 
-    def __call__(self, *args, **kwargs) -> 'Dispatcher':
+    def __call__(self, *args, **kwargs) -> Dispatcher:
         """
         Call bot as function constructor like
         Example:
@@ -68,7 +58,7 @@ class Bot:
         Decorator for message handler
         """
         return self.dispatch.message_handler(*args, **kwargs)
-   
+
     def callback_query_handler(self, *args, **kwargs):
         """
         Decorator for message handler
@@ -86,16 +76,19 @@ class Bot:
         Delete a bot message.
         """
         with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
-            await self.bot.delete_message(chat_id=chat_id, message_id=message_id)
+            await self.bot.delete_message(chat_id=chat_id,
+                                          message_id=message_id)
 
-    async def delete_messages(self, chat_id: int, last_message_id: int, count: int):
+    async def delete_messages(self, chat_id: int,
+                              last_message_id: int, count: int):
         """
         Delete bot messages.
         """
         for i in range(count):
             with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
-                await self.bot.delete_message(chat_id=chat_id, message_id=last_message_id-i)            
-    
+                await self.bot.delete_message(chat_id=chat_id,
+                                              message_id=last_message_id-i)
+
     async def get_current_state(self):
         """
         Get bot current state

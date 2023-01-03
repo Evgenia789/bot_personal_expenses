@@ -3,17 +3,18 @@ from aiogram.dispatcher.handler import CancelHandler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
 from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.states.states_chat import StateChat
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.helpers.keyboards.main_menu import \
     get_keyboard_main_menu
 from src.tgbot_expenses.helpers.keyboards.start_over_or_continue import \
     get_keyboard_start_over_or_continue
+from src.tgbot_expenses.states.states_chat import StateChat
 
 
 class StartOrContinueMiddleware(BaseMiddleware):
     """Start or continue middleware"""
-    async def on_pre_process_message(self, message: types.Message, data: dict) -> None:
+    async def on_pre_process_message(self, message: types.Message,
+                                     data: dict) -> None:
         """
         On pre process messages
         """
@@ -33,7 +34,8 @@ class StartOrContinueMiddleware(BaseMiddleware):
 
             raise CancelHandler()
 
-    async def on_pre_process_callback_query(self, query: types.CallbackQuery, data: dict) -> None:
+    async def on_pre_process_callback_query(self, query: types.CallbackQuery,
+                                            data: dict) -> None:
         """
         On pre process callback query
         """

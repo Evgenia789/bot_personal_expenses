@@ -13,7 +13,7 @@ async def get_statistics_and_chart(message: types.Message) -> types.Message:
 
     text_message = await get_data(data=monthly_expense_data)
     path_to_chart = await get_chart(data=monthly_expense_data)
-        
+
     message = await message.answer_photo(
         photo=types.InputFile(path_or_bytesio=path_to_chart),
         caption=text_message,
