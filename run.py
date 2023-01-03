@@ -9,7 +9,7 @@ from src.tgbot_expenses.config import load_config
 from src.tgbot_expenses.middlewares import (AuthorizationMiddleware,
                                             StartOrContinueMiddleware,
                                             UnknownMiddleware)
-from src.tgbot_expenses.utils.load_modules import loadModules
+from src.tgbot_expenses.utils.load_modules import load_module
 
 logger = logging.getLogger(__name__)
 config = load_config("bot.ini")
@@ -28,7 +28,7 @@ def main():
         datefmt="%Y-%m-%d %H:%M:%S",
     )
     logger.error("Starting bot")
-    loadModules("dialogs", cur_dir=os.path.abspath("src"))
+    load_module("dialogs", cur_dir=os.path.abspath("src"))
 
     executor.start_polling(bot, skip_updates=False)
 

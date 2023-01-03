@@ -1,7 +1,7 @@
 import os
 
 
-def loadModules(name: str, cur_dir: str):
+def load_module(name: str, cur_dir: str):
     """Process of loading modules"""
     new_path = f"{cur_dir}\\tgbot_expenses\\{name}"
     res = {}
