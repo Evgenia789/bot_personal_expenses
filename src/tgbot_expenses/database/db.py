@@ -116,7 +116,8 @@ class Database:
         return result
 
     def fetchallmonth(self) -> List[Tuple]:
-        current_month = f"{datetime.now().month}-{datetime.now().year}"
+        now = datetime.now()
+        current_month = f"{now.strftime('%m')}-{now.strftime('%Y')}"
         self.cursor.execute(f"SELECT name AS category_name, limit_amount, COALESCE(month_exp.total, 0) AS total, COALESCE(month_exp.cur_date, '{current_month}') AS month "
                             "FROM category "
                             "LEFT JOIN "

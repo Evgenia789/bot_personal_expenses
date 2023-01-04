@@ -7,6 +7,7 @@ from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
 from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.states.states_chat import StateChat
+from src.tgbot_expenses.utils.dollar_amount import get_dollar_amount
 
 
 @Bot.message_handler(state=StateChat.Amount,
@@ -23,10 +24,11 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         await message_invalid_amount(message=message, state=state)
     else:
         async with state.proxy() as data:
-            data["amount"] = int(message.text)
+            dollar_amount = await get_dollar_amount(data["bill"],
+                                                    int(message.text))
+            data["amount"] = dollar_amount
             category = data["category"]
             bill = data["bill"]
-            amount = data["amount"]
 
         await StateChat.DataConfirmation.set()
 
@@ -34,7 +36,7 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
                          text=(
                             f"<b>Category:</b> {category} \n"
                             f"<b>Bill:</b> {bill}\n"
-                            f"<b>Amount:</b> {amount}\n\n"
+                            f"<b>Amount:</b> {message.text}\n\n"
                          ) + QuestionText.confirmation,
                          reply_markup=get_keyboard_question(
                             button_names=ButtonText.confirmation

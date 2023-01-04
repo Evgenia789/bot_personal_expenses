@@ -129,3 +129,5 @@ service_account.json
 
 # Pyre type checker
 .pyre/
+
+src.tgbot_expenses.utils.chart/
