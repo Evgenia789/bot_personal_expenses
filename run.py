@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.utils import executor
 
 from src.tgbot_expenses.bot import Bot
@@ -19,6 +20,7 @@ bot = Bot(config.tg_bot.token)
 Bot.dispatch.middleware.setup(StartOrContinueMiddleware())
 Bot.dispatch.middleware.setup(UnknownMiddleware())
 Bot.dispatch.middleware.setup(AuthorizationMiddleware())
+Bot.dispatch.middleware.setup(LoggingMiddleware())
 
 
 def main():
@@ -26,6 +28,8 @@ def main():
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
+        filename='main.log',
+        filemode='w'
     )
     logger.error("Starting bot")
     load_module("dialogs", cur_dir=os.path.abspath("src"))
