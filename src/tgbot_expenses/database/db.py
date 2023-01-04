@@ -2,6 +2,9 @@ import sqlite3
 from datetime import datetime
 from typing import List, Tuple
 
+from src.tgbot_expenses.utils.google_spreadsheet import \
+    add_data_to_google_table
+
 
 class Database:
     __instance = None
@@ -26,7 +29,7 @@ class Database:
 
     def _init_db(self):
         """Initializes the database"""
-        with open("src/tgbot_personal_expenses/database/createdb.sql",
+        with open("src/tgbot_expenses/database/createdb.sql",
                   "r", encoding="utf-8") as f:
             sql = f.read()
         self.cursor.executescript(sql)
@@ -47,18 +50,26 @@ class Database:
         """Insert a new entry"""
         category_id = self.fetchone("category", category_name)
         bill_id = self.fetchone("bill", bill_name)
-        self.cursor.execute(f"INSERT INTO item VALUES ({amount}, "
-                            f"{category_id}, {bill_id}, "
+        self.cursor.execute(f"INSERT INTO "
+                            "item (amount, category_id, bill_id, date) "
+                            f"VALUES ({amount}, {category_id}, {bill_id}, "
                             "datetime('now','localtime'))")
         self.connection.commit()
+
+        last_id = self.get_id_last_entry()
+        date_today = datetime.now()
+        add_data_to_google_table(
+            data=[last_id[0], amount, category_name,
+                  bill_name, date_today.strftime("%d/%m/%y")]
+        )
 
     def get_category_limit(self, category_name: str) -> int:
         """Get category limit"""
         self.cursor.execute(f"SELECT limit_amount "
                             "FROM category "
                             f"WHERE name='{category_name}'")
-        result = self.cursor.fetchone()
-        return result[0]
+
+        return self.cursor.fetchone()[0]
 
     def update_limit(self, category_name: str, new_limit: int) -> None:
         """Update category limit"""
@@ -66,6 +77,7 @@ class Database:
                             f"SET limit_amount='{new_limit}' "
                             f"WHERE name='{category_name}'")
         self.connection.commit()
+
         return
 
     def archive_bill(self, bill_name: str) -> None:
@@ -74,6 +86,7 @@ class Database:
                             "SET status='archive' "
                             f"WHERE name='{bill_name}'")
         self.connection.commit()
+
         return
 
     def get_all_bills(self) -> str:
@@ -82,12 +95,14 @@ class Database:
                             "FROM bill "
                             "WHERE status='active'")
         bills = self.cursor.fetchall()
+
         return ";".join([bill[0] for bill in bills])
 
     def get_all_categories(self) -> str:
         """Get all categories"""
         self.cursor.execute("SELECT name FROM category")
         categories = self.cursor.fetchall()
+
         return ";".join([category[0] for category in categories])
 
     def insert_account(self, account_name: str) -> None:
@@ -97,13 +112,15 @@ class Database:
         self.connection.commit()
 
     def fetchone(self, table: str, field_name: str):
+        """Get one from the table"""
         self.cursor.execute("SELECT id "
                             f"FROM {table} "
                             f"WHERE name='{field_name}'")
-        result = self.cursor.fetchone()
-        return result[0]
+
+        return self.cursor.fetchone()[0]
 
     def fetchall(self, table: str, columns: List[str]) -> List[Tuple]:
+        """Get all the data from table"""
         columns_joined = ", ".join(columns)
         self.cursor.execute(f"SELECT {columns_joined} FROM {table}")
         rows = self.cursor.fetchall()
@@ -116,6 +133,7 @@ class Database:
         return result
 
     def fetchallmonth(self) -> List[Tuple]:
+        """Get all the data from the item table for the current month"""
         now = datetime.now()
         current_month = f"{now.strftime('%m')}-{now.strftime('%Y')}"
         self.cursor.execute(f"SELECT name AS category_name, limit_amount, COALESCE(month_exp.total, 0) AS total, COALESCE(month_exp.cur_date, '{current_month}') AS month "
@@ -135,6 +153,11 @@ class Database:
                 dict_row[column] = row[index]
             result.append(dict_row)
         return result
+
+    def get_id_last_entry(self) -> int:
+        """Get the last id from the item table"""
+        self.cursor.execute("SELECT max(id) FROM item")
+        return self.cursor.fetchall()[0]
 
 
 database = Database()

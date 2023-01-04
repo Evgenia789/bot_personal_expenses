@@ -11,6 +11,7 @@ create table bill(
 );
 
 create table item(
+    id integer primary key AUTOINCREMENT,
     amount integer,
     category_id integer,
     bill_id integer,
@@ -59,12 +60,3 @@ values
     (21, "Cash LAR", "active"),
     (22, "J Bank of Georgia USD", "active"),
     (23, "J Bank of Georgia LAR", "active");
-
-
-insert into item (amount, category_id, bill_id, date)
-VALUES
-    (10000, 3, 4, "2022-11-12 16:33:32"),
-    (100, 5, 7, "2022-12-12 16:33:32"),
-    (200, 6, 4, "2022-12-12 16:33:32"),
-    (450, 9, 4, "2022-12-12 16:33:32"),
-    (450, 9, 4, "2022-12-9 16:33:32");

@@ -3,7 +3,6 @@ from typing import List, Tuple
 
 async def get_data(data: List[Tuple]) -> str:
     """Get data for statistics"""
-    print(data)
     text_msg = "\n"
     total_amount = 0
     total_limit = 0
