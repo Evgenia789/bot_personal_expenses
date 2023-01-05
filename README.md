@@ -21,7 +21,7 @@ cd bot_personal_expenses
 
 Создать и активировать виртуальное окружение:
 
-```
+```git
 python -m venv venv
 source venv/Scripts/activate
 ```
