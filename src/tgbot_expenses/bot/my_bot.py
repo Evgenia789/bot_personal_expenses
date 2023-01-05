@@ -10,17 +10,6 @@ from aiogram.utils.exceptions import (BotBlocked, ChatNotFound,
                                       TelegramAPIError, UserDeactivated)
 
 
-async def send_answer(message: types.Message, *args, **kwargs) -> bool:
-    """
-    Send answer to user
-    """
-    with suppress(BotBlocked, ChatNotFound,
-                  UserDeactivated, TelegramAPIError):
-        res = await message.answer(**kwargs)
-
-    return res
-
-
 class Bot:
     __instance: 'Bot' = None
     dispatch: Dispatcher = None
@@ -36,8 +25,7 @@ class Bot:
 
     def __init__(self, token: str = None, parse_mode: str = ParseMode.HTML):
         """
-        Constructor
-        Initialize bot instance
+        Constructor initialize bot instance
         """
         if token is not None:
             self.bot = aiogram.Bot(token=token, parse_mode=parse_mode)
@@ -46,9 +34,7 @@ class Bot:
 
     def __call__(self, *args, **kwargs) -> Dispatcher:
         """
-        Call bot as function constructor like
-        Example:
-            bot = Bot(telegram_token)
+        Call bot as function constructor
         """
         self.__init__(*args, **kwargs)
         return self.dispatch
@@ -61,7 +47,7 @@ class Bot:
 
     def callback_query_handler(self, *args, **kwargs):
         """
-        Decorator for message handler
+        Decorator for callback handler
         """
         return self.dispatch.callback_query_handler(*args, **kwargs)
 
@@ -69,7 +55,10 @@ class Bot:
         """
         Send text message to user
         """
-        return await send_answer(message, text=text, **kwargs)
+        with suppress(BotBlocked, ChatNotFound,
+                      UserDeactivated, TelegramAPIError):
+            res = await message.answer(text=text, **kwargs)
+        return res
 
     async def delete_message(self, chat_id: int, message_id: int):
         """

@@ -33,30 +33,3 @@ values
     (8, "Medicine", 500),
     (9, "Entertainments", 500),
     (10, "Other", 500);
-
-
-insert into bill (id, name, status)
-values
-    (1, "IIS Alfa RUB", "active"),
-    (2, "Alfa RUB", "active"),
-    (3, "Alfa USD", "active"),
-    (4, "Deposit Alfa RUB", "active"),
-    (5, "Credit mir Alfa RUB", "active"),
-    (6, "Credit MC Alfa RUB", "active"),
-    (7, "A Tinkof RUB", "active"),
-    (8, "A Tinkof credit RUB", "active"),
-    (9, "J Tinkof USD", "active"),
-    (10, "J Tinkof RUB", "active"),
-    (11, "J Tinkof IIS RUB", "active"),
-    (12, "Salary mir RUB", "active"),
-    (13, "Binance USD", "active"),
-    (14, "TrustWallet old USD", "active"),
-    (15, "TrustWallet new USD", "active"),
-    (16, "Qiwi RUB", "active"),
-    (17, "Credit Vitya USD", "active"),
-    (18, "Credit Vitya RUB", "active"),
-    (19, "Cash RUB", "active"),
-    (20, "Cash USD", "active"),
-    (21, "Cash LAR", "active"),
-    (22, "J Bank of Georgia USD", "active"),
-    (23, "J Bank of Georgia LAR", "active");
