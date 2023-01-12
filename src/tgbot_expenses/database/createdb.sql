@@ -12,7 +12,7 @@ create table bill(
 
 create table item(
     id integer primary key AUTOINCREMENT,
-    amount integer,
+    amount float,
     category_id integer,
     bill_id integer,
     date TIMESTAMP,
@@ -23,13 +23,13 @@ create table item(
 
 insert into category (id, name, limit_amount)
 values
-    (1, "Supermarkets", 500),
-    (2, "Cafes and restaurants", 500),
-    (3, "Transport", 500),
-    (4, "Housing", 500),
-    (5, "Clothes", 500),
-    (6, "Household Goods", 500),
-    (7, "Cat", 500),
-    (8, "Medicine", 500),
-    (9, "Entertainments", 500),
-    (10, "Other", 500);
+    (1, "Supermarkets", 350),
+    (2, "Cafes and restaurants", 150),
+    (3, "Transport", 50),
+    (4, "Housing", 900),
+    (5, "Clothes", 100),
+    (6, "Household Goods", 100),
+    (7, "Cat", 50),
+    (8, "Medicine", 100),
+    (9, "Entertainments", 50),
+    (10, "Other", 100);

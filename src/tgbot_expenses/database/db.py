@@ -46,7 +46,7 @@ class Database:
         self._init_db()
 
     def insert_item(self, category_name: str,
-                    bill_name: str, amount: int) -> None:
+                    bill_name: str, amount: float) -> None:
         """Insert a new entry"""
         category_id = self.fetchone("category", category_name)
         bill_id = self.fetchone("bill", bill_name)

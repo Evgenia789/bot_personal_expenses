@@ -13,5 +13,5 @@ async def get_data(data: List[Tuple]) -> str:
         total_amount += d['total']
         total_limit += d['limit_expenses']
     text_msg = text_msg + (f"\n\n<b>Total expenses:</b>"
-                           f" {total_amount} / {total_limit}")
+                           f" {round(total_amount, 2)} / {total_limit}")
     return text_msg
