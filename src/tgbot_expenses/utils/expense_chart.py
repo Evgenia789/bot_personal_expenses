@@ -15,7 +15,7 @@ async def get_chart(data: List[Tuple]) -> str:
             categories.append(d["category_name"])
             amount.append(d["total"])
     fig1, ax1 = plt.subplots()
-    ax1.pie(amount, labels=categories)
+    ax1.pie(amount, labels=categories, autopct='%1.0f%%')
     ax1.axis('equal')
     ax1.set_title(label=f"Expenses for {datetime.now().strftime('%B')}",
                   fontweight="bold", pad=20)

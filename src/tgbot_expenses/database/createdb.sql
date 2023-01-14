@@ -33,3 +33,9 @@ values
     (8, "Medicine", 100),
     (9, "Entertainments", 50),
     (10, "Other", 100);
+
+
+insert into bill (id, name, status)
+values
+    (1, "Alfa RUB", "active"),
+    (2, "Tinkof RUB", "active");
