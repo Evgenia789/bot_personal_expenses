@@ -9,7 +9,7 @@ async def get_data(data: List[Tuple]) -> str:
     for d in data:
         emoji = "😱" if d['total'] >= d['limit_expenses'] else ""
         text_msg = text_msg + (f"\n<b>{d['category_name']}:</b> {emoji}"
-                               f"{d['total']} / {d['limit_expenses']}")
+                               f"{round(d['total'], 2)} / {d['limit_expenses']}")
         total_amount += d['total']
         total_limit += d['limit_expenses']
     text_msg = text_msg + (f"\n\n<b>Total expenses:</b>"
