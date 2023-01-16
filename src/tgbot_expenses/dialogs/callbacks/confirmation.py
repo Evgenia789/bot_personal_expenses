@@ -27,7 +27,8 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
         async with state.proxy() as data:
             database.insert_item(category_name=data["category"],
                                  bill_name=data["bill"],
-                                 amount=data["amount"])
+                                 amount=data["amount"],
+                                 initial_amount=data["initial_amount"])
 
         await get_statistics_and_chart(query.message)
 

@@ -46,7 +46,7 @@ class Database:
         self._init_db()
 
     def insert_item(self, category_name: str,
-                    bill_name: str, amount: float) -> None:
+                    bill_name: str, amount: float, initial_amount: float) -> None:
         """Insert a new entry"""
         category_id = self.fetchone("category", category_name)
         bill_id = self.fetchone("bill", bill_name)
@@ -59,8 +59,8 @@ class Database:
         last_id = self.get_id_last_entry()
         date_today = datetime.now()
         add_data_to_google_table(
-            data=[last_id[0], amount, category_name,
-                  bill_name, date_today.strftime("%d/%m/%y")]
+            data=[last_id[0], amount, category_name, bill_name,
+                  date_today.strftime("%d/%m/%y"), initial_amount]
         )
 
     def get_category_limit(self, category_name: str) -> int:

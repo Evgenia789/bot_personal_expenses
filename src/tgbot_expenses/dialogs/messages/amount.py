@@ -26,6 +26,7 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         async with state.proxy() as data:
             dollar_amount = await get_dollar_amount(data["bill"],
                                                     float(message.text))
+            data["initial_amount"] = round(float(message.text), 2)
             data["amount"] = dollar_amount
             category = data["category"]
             bill = data["bill"]
