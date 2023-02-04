@@ -8,21 +8,21 @@ from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.states.states_chat import StateChat
 
 
-@Bot.callback_query_handler(text="make_expenses", state=StateChat.MainMenu)
-async def callbacks_make_expenses(query: types.CallbackQuery,
-                                  state: FSMContext) -> None:
+@Bot.callback_query_handler(text="make_incomes", state=StateChat.MainMenu)
+async def callbacks_make_incomes(query: types.CallbackQuery,
+                                 state: FSMContext) -> None:
     """
-    The process of starting to fill in expenses.
+    The process of starting to fill in incomes.
     """
     await query.message.delete()
 
-    await StateChat.Category.set()
+    await StateChat.Bill.set()
 
     await Bot.answer(
         message=query.message,
-        text=QuestionText.category,
+        text=QuestionText.bill,
         reply_markup=get_keyboard_question(
-            button_names=database.get_all_categories(),
+            button_names=database.get_all_bills(),
             button_back=True
         )
     )

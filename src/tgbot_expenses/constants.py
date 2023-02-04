@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class ButtonText:
-    main_menu = "View statistics;Make expenses;Settings"
+    main_menu = "View statistics;Make expenses;Make income;Settings"
     confirmation = "Confirm;Cancel"
 
 
@@ -11,8 +11,8 @@ class ButtonText:
 class QuestionText:
     main_menu = "What do you want to do?"
     category = "Choose a category where your expenses belong"
-    bill = "Choose which account to write off expenses from"
-    amount = "Enter the amount of expenses"
+    bill = "Choose the bill"
+    amount = "Enter the amount"
     confirmation = ("Confirm the entered data or click the "
                     "'Cancel' button to start over")
     last_message = "Data added!"

@@ -23,21 +23,27 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
 
     if query.data == "Confirm":
         await query.message.delete()
-
         async with state.proxy() as data:
-            database.insert_item(category_name=data["category"],
-                                 bill_name=data["bill"],
-                                 amount=data["amount"],
-                                 initial_amount=data["initial_amount"])
-
-        await get_statistics_and_chart(query.message)
+            category = data.get("category")
+            if category is not None:
+                database.insert_item(category_name=data["category"],
+                                     bill_name=data["bill"],
+                                     amount=data["amount"],
+                                     initial_amount=data["initial_amount"])
+            else:
+                database.insert_income(bill_name=data["bill"],
+                                       amount=data["amount"])
 
         last_message = await Bot.answer(message=query.message,
                                         text=QuestionText.last_message)
 
         await asyncio.sleep(2)
 
-        await last_message.delete()
+        if category is not None:
+            await last_message.delete()
+            await get_statistics_and_chart(query.message)
+        else:
+            await send_welcome(message=last_message, state=state)
     else:
         await send_welcome(message=query.message, state=state)
 

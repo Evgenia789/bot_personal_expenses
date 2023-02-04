@@ -14,7 +14,7 @@ from src.tgbot_expenses.utils.dollar_amount import get_dollar_amount
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
-    Process a message about the amount of expenses.
+    Process a message about the amount.
     """
     await Bot.delete_messages(chat_id=message.chat.id,
                               last_message_id=message.message_id, count=2)
@@ -28,14 +28,15 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
                                                     float(message.text))
             data["initial_amount"] = round(float(message.text), 2)
             data["amount"] = dollar_amount
-            category = data["category"]
+            category = data.get("category")
             bill = data["bill"]
 
         await StateChat.DataConfirmation.set()
 
+        category_text = f"<b>Category:</b> {category} \n" if category is not None else ""
+
         await Bot.answer(message=message,
-                         text=(
-                            f"<b>Category:</b> {category} \n"
+                         text=category_text + (
                             f"<b>Bill:</b> {bill}\n"
                             f"<b>Amount:</b> {message.text}\n\n"
                          ) + QuestionText.confirmation,

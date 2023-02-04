@@ -20,6 +20,14 @@ create table item(
     FOREIGN KEY(bill_id) REFERENCES bil(id)
 );
 
+create table income(
+    id integer primary key AUTOINCREMENT,
+    amount float,
+    bill_id integer,
+    date TIMESTAMP,
+    FOREIGN KEY(bill_id) REFERENCES bil(id)
+);
+
 
 insert into category (id, name, limit_amount)
 values

@@ -10,6 +10,8 @@ def get_keyboard_main_menu() -> InlineKeyboardMarkup:
                              callback_data="view_statistics"),
         InlineKeyboardButton(text="Make expenses",
                              callback_data="make_expenses"),
+        InlineKeyboardButton(text="Make income",
+                             callback_data="make_incomes"),
         InlineKeyboardButton(text="Settings",
                              callback_data="settings")
     )

@@ -2,7 +2,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 
-def add_data_to_google_table(data: list) -> None:
+def add_data_to_google_table(data: list, name_title: str) -> None:
     """Add new data to Google Spreadsheet"""
     scopes = [
         'https://www.googleapis.com/auth/spreadsheets',
@@ -21,6 +21,6 @@ def add_data_to_google_table(data: list) -> None:
 
     sh = gc.open("Expenses")  # You need to specify the name of your table
 
-    worksheet = sh.sheet1
+    worksheet = sh.worksheet(title=name_title)
 
     worksheet.insert_row(data, data[0]+1)

@@ -56,11 +56,29 @@ class Database:
                             "datetime('now','localtime'))")
         self.connection.commit()
 
-        last_id = self.get_id_last_entry()
+        last_id = self.get_id_last_entry(table="item")
         date_today = datetime.now()
         add_data_to_google_table(
             data=[last_id[0], amount, category_name, bill_name,
-                  date_today.strftime("%d/%m/%y"), initial_amount]
+                  date_today.strftime("%d/%m/%y"), initial_amount],
+            name_title="test_expenses"
+        )
+
+    def insert_income(self, bill_name: str, amount: float) -> None:
+        """Insert a new entry"""
+        bill_id = self.fetchone("bill", bill_name)
+        self.cursor.execute(f"INSERT INTO "
+                            "income (amount, bill_id, date) "
+                            f"VALUES ({amount}, {bill_id}, "
+                            "datetime('now','localtime'))")
+        self.connection.commit()
+
+        last_id = self.get_id_last_entry(table="income")
+        date_today = datetime.now()
+        add_data_to_google_table(
+            data=[last_id[0], amount, bill_name,
+                  date_today.strftime("%d/%m/%y")],
+            name_title="test_incomes"
         )
 
     def get_category_limit(self, category_name: str) -> int:
@@ -154,9 +172,9 @@ class Database:
             result.append(dict_row)
         return result
 
-    def get_id_last_entry(self) -> int:
-        """Get the last id from the item table"""
-        self.cursor.execute("SELECT max(id) FROM item")
+    def get_id_last_entry(self, table: str) -> int:
+        """Get the last id from the table"""
+        self.cursor.execute(f"SELECT max(id) FROM '{table}'")
         return self.cursor.fetchall()[0]
 
 
