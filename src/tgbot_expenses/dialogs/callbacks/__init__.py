@@ -1,9 +1,12 @@
 from src.tgbot_expenses.dialogs.callbacks import (back, bill_for_deleting,
                                                   bills, categories,
+                                                  category_for_deleting,
                                                   category_limit,
                                                   changing_bill,
+                                                  changing_category,
                                                   changing_limit,
                                                   confirmation, delete_bill,
+                                                  delete_category,
                                                   expenses, incomes,
-                                                  new_bill, settings,
-                                                  statistics)
+                                                  new_bill, new_category,
+                                                  settings, statistics)

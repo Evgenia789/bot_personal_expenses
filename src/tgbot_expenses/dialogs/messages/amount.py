@@ -27,13 +27,15 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
             dollar_amount = await get_dollar_amount(data["bill"],
                                                     float(message.text))
             data["initial_amount"] = round(float(message.text), 2)
-            data["amount"] = dollar_amount
             category = data.get("category")
+            data["amount"] = round(float(message.text), 2) \
+                if category is None else dollar_amount
             bill = data["bill"]
 
         await StateChat.DataConfirmation.set()
 
-        category_text = f"<b>Category:</b> {category} \n" if category is not None else ""
+        category_text = f"<b>Category:</b> {category} \n" \
+            if category is not None else ""
 
         await Bot.answer(message=message,
                          text=category_text + (

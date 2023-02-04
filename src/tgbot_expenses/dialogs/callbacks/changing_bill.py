@@ -20,6 +20,6 @@ async def callbacks_change_bill(query: types.CallbackQuery,
 
     await Bot.answer(
         message=query.message,
-        text=QuestionText.bills,
+        text=QuestionText.changing,
         reply_markup=str(get_keyboard_changing_bill())
     )

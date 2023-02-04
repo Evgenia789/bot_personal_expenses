@@ -33,16 +33,24 @@ async def message_invalid_amount(message: types.Message,
 
         await Bot.answer(message=message, text=QuestionText.amount)
     else:
-        await StateSettings.NewLimit.set()
-
         async with state.proxy() as data:
-            limit_category = data["limit_category"]
+            limit_category = data.get("limit_category")
 
-        await Bot.answer(
-            message=message,
-            text=(f"Current limit: {limit_category}\n"
-                  "Send a new limit for category"),
-            reply_markup=str(get_keyboard_back_or_main_menu(
-                main_menu_button=False
-            ))
-        )
+        if limit_category is not None:
+            await StateSettings.NewLimit.set()
+
+            await Bot.answer(
+                message=message,
+                text=(f"Current limit: {limit_category}\n"
+                      "Send a new limit for category"),
+                reply_markup=str(get_keyboard_back_or_main_menu(
+                    main_menu_button=False
+                ))
+            )
+        else:
+            await StateSettings.CategoryLimit.set()
+
+            await Bot.answer(
+                message=message,
+                text=QuestionText.category_limit
+            )

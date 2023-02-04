@@ -107,6 +107,18 @@ class Database:
 
         return
 
+    def archive_category(self, category_name: str) -> None:
+        """Send the bill to the archive"""
+        if not self.check_column_exist(table="category", column="status"):
+            self.cursor.execute('ALTER TABLE category ADD status varchar(50) DEFAULT "active"')
+
+        self.cursor.execute(f"UPDATE category "
+                            "SET status='archive' "
+                            f"WHERE name='{category_name}'")
+        self.connection.commit()
+
+        return
+
     def get_all_bills(self) -> str:
         """Get all bills"""
         self.cursor.execute("SELECT name "
@@ -118,7 +130,12 @@ class Database:
 
     def get_all_categories(self) -> str:
         """Get all categories"""
-        self.cursor.execute("SELECT name FROM category")
+        if not self.check_column_exist(table="category", column="status"):
+            self.cursor.execute("SELECT name FROM category")
+        else:
+            self.cursor.execute("SELECT name "
+                                "FROM category "
+                                "WHERE status='active'")
         categories = self.cursor.fetchall()
 
         return ";".join([category[0] for category in categories])
@@ -127,6 +144,16 @@ class Database:
         """Insert a new entry"""
         self.cursor.execute("INSERT INTO bill (name, status) "
                             f"VALUES ('{account_name}', 'active')")
+        self.connection.commit()
+
+    def insert_category(self, category_name: str, limit_amount: int) -> None:
+        """Insert a new entry"""
+        if not self.check_column_exist(table="category", column="status"):
+            self.cursor.execute("INSERT INTO category (name, limit_amount) "
+                                f"VALUES ('{category_name}', '{limit_amount}')")
+        else:
+            self.cursor.execute("INSERT INTO category (name, limit_amount, status) "
+                                f"VALUES ('{category_name}', '{limit_amount}', 'active')")
         self.connection.commit()
 
     def fetchone(self, table: str, field_name: str):
@@ -176,6 +203,14 @@ class Database:
         """Get the last id from the table"""
         self.cursor.execute(f"SELECT max(id) FROM '{table}'")
         return self.cursor.fetchall()[0]
+
+    def check_column_exist(self, table: str, column: str) -> bool:
+        """Check the column exists in the table"""
+        data = self.cursor.execute(f"SELECT * FROM '{table}'")
+        name_columns = [i[0] for i in data.description]
+        if column in name_columns:
+            return True
+        return False
 
 
 database = Database()
