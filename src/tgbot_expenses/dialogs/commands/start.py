@@ -5,7 +5,7 @@ from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.helpers.keyboards.main_menu import \
     get_keyboard_main_menu
-from src.tgbot_expenses.states.states_chat import StateChat
+from src.tgbot_expenses.states.chat_states import StateChat
 
 
 @Bot.message_handler(commands=["start"], state="*")

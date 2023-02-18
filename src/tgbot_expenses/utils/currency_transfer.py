@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def get_currency_rate(currency: str) -> int:
+def get_currency_rate(currency: str) -> float:
     """Get a currency rate"""
     headers = {'User-Agent': ('Mozilla/5.0 (Macintosh; '
                               'Intel Mac OS X 10_15_3) '

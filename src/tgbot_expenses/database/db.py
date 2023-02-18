@@ -140,10 +140,10 @@ class Database:
 
         return ";".join([category[0] for category in categories])
 
-    def insert_account(self, account_name: str) -> None:
+    def insert_account(self, account_name: str, account_amount: float) -> None:
         """Insert a new entry"""
-        self.cursor.execute("INSERT INTO bill (name, status) "
-                            f"VALUES ('{account_name}', 'active')")
+        self.cursor.execute("INSERT INTO bill (name, amount, status) "
+                            f"VALUES ('{account_name}', '{account_amount}', 'active')")
         self.connection.commit()
 
     def insert_category(self, category_name: str, limit_amount: int) -> None:

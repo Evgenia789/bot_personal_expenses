@@ -12,8 +12,7 @@ from src.tgbot_expenses.helpers.keyboards.main_menu import \
     get_keyboard_main_menu
 from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.helpers.keyboards.settings import get_keyboard_settings
-from src.tgbot_expenses.states.states_chat import StateChat
-from src.tgbot_expenses.states.states_settings import StateSettings
+from src.tgbot_expenses.states.chat_states import StateChat, StateSettings
 
 
 @Bot.callback_query_handler(text="back", state="*")

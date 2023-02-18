@@ -5,52 +5,33 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.helpers.keyboards.back_or_main_menu import \
-    get_keyboard_back_or_main_menu
-from src.tgbot_expenses.states.states_chat import StateChat
-from src.tgbot_expenses.states.states_settings import StateSettings
+from src.tgbot_expenses.states import chat_states
 
 
-@Bot.message_handler(state=[StateChat.InvalidAmount,
-                            StateSettings.InvalidAmount],
+@Bot.message_handler(state=chat_states.StateInvalid.InvalidAmount,
                      content_types=types.ContentType.ANY)
 async def message_invalid_amount(message: types.Message,
                                  state: FSMContext) -> None:
     """
-    Process a message about an invalid expense amount format.
+    Process a message about an invalid amount format.
     """
-    message_warning = await message.answer(QuestionText.warning_number)
+    await Bot.delete_message(chat_id=message.chat.id,
+                             message_id=message.message_id)
 
-    current_state = await Bot.get_current_state()
-    current_state_name = current_state.split(":")[0]
+    message_warning = await message.answer(QuestionText.warning_number)
 
     await asyncio.sleep(2)
 
     await message_warning.delete()
 
-    if current_state_name == "StateChat":
-        await StateChat.Amount.set()
+    async with state.proxy() as data:
+        prev_state, state_name = data.get("state").split(":")
+        text_message = data.get("previous_question")
+        keyboard = data.get("reply_markup")
 
-        await Bot.answer(message=message, text=QuestionText.amount)
-    else:
-        async with state.proxy() as data:
-            limit_category = data.get("limit_category")
+    await state.set_state(
+        chat_states.__dict__[prev_state].__dict__[state_name]
+    )
 
-        if limit_category is not None:
-            await StateSettings.NewLimit.set()
-
-            await Bot.answer(
-                message=message,
-                text=(f"Current limit: {limit_category}\n"
-                      "Send a new limit for category"),
-                reply_markup=str(get_keyboard_back_or_main_menu(
-                    main_menu_button=False
-                ))
-            )
-        else:
-            await StateSettings.CategoryLimit.set()
-
-            await Bot.answer(
-                message=message,
-                text=QuestionText.category_limit
-            )
+    await Bot.answer(message=message, text=text_message,
+                     reply_markup=None if keyboard is None else keyboard)

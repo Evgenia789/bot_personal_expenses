@@ -19,7 +19,8 @@ class UnknownMiddleware(BaseMiddleware):
         if current_state is None or (
             current_state.split(":")[-1] in ["Amount", "InvalidAmount",
                                              "NewLimit", "AddBill",
-                                             "CategoryLimit", "AddCategory"]
+                                             "CategoryLimit", "AddCategory",
+                                             "AmountBill"]
         ):
             return None
 
