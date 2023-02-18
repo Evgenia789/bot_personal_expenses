@@ -10,7 +10,6 @@ class StateChat(StatesGroup):
     Category = State()
     Bill = State()
     Amount = State()
-    InvalidAmount = State()
     DataConfirmation = State()
 
 
@@ -21,7 +20,6 @@ class StateSettings(StatesGroup):
     MainMenu = State()
     ChangeLimit = State()
     NewLimit = State()
-    InvalidAmount = State()
     ChangeBill = State()
     AddBill = State()
     AmountBill = State()
