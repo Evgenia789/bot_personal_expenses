@@ -31,7 +31,6 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         await message_invalid_amount(message=message, state=state)
     else:
         async with state.proxy() as data:
-            # dollar_amount = await get_dollar_amount(data["bill"], amount)
             data["initial_amount"] = round(amount, 2)
             category = data.get("category")
             data["amount"] = round(amount, 2) \

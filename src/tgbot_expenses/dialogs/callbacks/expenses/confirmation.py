@@ -18,10 +18,8 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
     """
     Data confirmation process
     """
-    await Bot.delete_message(chat_id=query.message.chat.id,
-                             message_id=query.message.message_id-1)
-
-    await query.message.delete()  # Why???
+    await Bot.delete_messages(chat_id=query.message.chat.id,
+                              last_message_id=query.message.message_id, count=2)
 
     async with state.proxy() as data:
         # The category name is not None, if this is the process of confirming
