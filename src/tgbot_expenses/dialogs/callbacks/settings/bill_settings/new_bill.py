@@ -9,8 +9,8 @@ from src.tgbot_expenses.states.chat_states import StateSettings
 
 
 @Bot.callback_query_handler(text="add_bill", state=StateSettings.ChangeBill)
-async def callbacks_add_new_bill(query: types.CallbackQuery,
-                                 state: FSMContext) -> None:
+async def callbacks_add_a_new_bill(query: types.CallbackQuery,
+                                   state: FSMContext) -> None:
     """
     The process of adding a new bill.
     """

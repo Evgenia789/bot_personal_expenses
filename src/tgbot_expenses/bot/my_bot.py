@@ -57,8 +57,7 @@ class Bot:
         """
         with suppress(BotBlocked, ChatNotFound,
                       UserDeactivated, TelegramAPIError):
-            res = await message.answer(text=text, **kwargs)
-        return res
+            return await message.answer(text=text, **kwargs)
 
     async def delete_message(self, chat_id: int, message_id: int):
         """

@@ -12,8 +12,8 @@ class QuestionText:
     last_message = "Data added!"
     limits = "Choose category to change the limit"
     changing = "Do you want to add or delete?"
-    new_bill = ("Send the bill name in the format "
-                "`<bill name> <currency name: RUB, RSD, EUR, LAR, USD>`")
+    new_bill = ("Send the bill name for example: "
+                "Bill Name USD")
     new_category = "Send the category name"
     category_limit = "Send a limit for a new category"
     archive_bill = "Choose the bill you want to delete"
