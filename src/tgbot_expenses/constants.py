@@ -2,12 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ButtonText:
-    main_menu = "View statistics;Make expenses;Make income;Settings"
-    confirmation = "Confirm;Cancel"
-
-
-@dataclass
 class QuestionText:
     main_menu = "What do you want to do?"
     category = "Choose a category where your expenses belong"
@@ -18,7 +12,8 @@ class QuestionText:
     last_message = "Data added!"
     limits = "Choose category to change the limit"
     changing = "Do you want to add or delete?"
-    new_bill = "Send the bill name"
+    new_bill = ("Send the bill name in the format "
+                "`<bill name> <currency name: RUB, RSD, EUR, LAR, USD>`")
     new_category = "Send the category name"
     category_limit = "Send a limit for a new category"
     archive_bill = "Choose the bill you want to delete"
