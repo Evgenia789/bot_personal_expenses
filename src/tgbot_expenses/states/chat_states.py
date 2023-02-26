@@ -30,6 +30,16 @@ class StateSettings(StatesGroup):
     DeleteCategory = State()
 
 
+class StateCurrencyExchange(StatesGroup):
+    """
+    StateCurrencyExchange state
+    """
+    FromBill = State()
+    Amount = State()
+    ToBill = State()
+    DataConfirmation = State()
+
+
 class StateInvalid(StatesGroup):
     """
     StateInvalid state

@@ -3,15 +3,16 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
+from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
-from src.tgbot_expenses.helpers.keyboards.confirmation import \
-    get_keyboard_confirmation
-from src.tgbot_expenses.states.chat_states import StateChat, StateInvalid
+from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
+from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
+                                                   StateInvalid)
 from src.tgbot_expenses.utils.dollar_amount import get_dollar_amount
 
 
-@Bot.message_handler(state=StateChat.Amount,
+@Bot.message_handler(state=StateCurrencyExchange.Amount,
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
@@ -31,22 +32,19 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         await message_invalid_amount(message=message, state=state)
     else:
         async with state.proxy() as data:
-            data["initial_amount"] = round(amount, 2)
-            category = data.get("category")
-            data["amount"] = round(amount, 2) \
-                if category is None \
-                else await get_dollar_amount(data["bill"], amount)
-            bill = data["bill"]
+            data["amount_old_currency"] = round(amount, 2)
+            data["dollar_amount"] = await get_dollar_amount(
+                bill=data["bill_from"],
+                amount=amount
+            )
 
-        await StateChat.DataConfirmation.set()
+        await StateCurrencyExchange.next()
 
-        category_text = f"<b>Category:</b> {category} \n" \
-            if category is not None else ""
-
-        text_message = category_text + (f"<b>Bill:</b> {bill}\n"
-                                        f"<b>Amount:</b> {amount}\n\n"
-                                        ) + QuestionText.confirmation
-
-        await Bot.answer(message=message,
-                         text=text_message,
-                         reply_markup=get_keyboard_confirmation())
+        await Bot.answer(
+            message=message,
+            text=QuestionText.to_bill,
+            reply_markup=get_keyboard_question(
+                button_names=database.get_all_bills(),
+                button_back=True
+            )
+        )

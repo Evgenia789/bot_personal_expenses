@@ -21,3 +21,5 @@ class QuestionText:
     result_archive = "Archived"
     warning_number = "You need to enter a number!"
     start = "You are in the process of entering expenses"
+    from_bill = "Select the bill you want to transfer money from"
+    to_bill = "Select the bill to which you want to transfer money"
