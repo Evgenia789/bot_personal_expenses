@@ -45,24 +45,7 @@ values
     (10, "Other", 100, "active");
 
 
--- insert into bill (id, name, amount, status)
--- values
---     (1, "Alfa RUB", 1000, "active"),
---     (2, "Tinkof RUB", 2000, "active");
-
 insert into bill (id, name, amount, status)
 values
-    (1, "IIS Alfa RUB", 1000, "active"),
-    (2, "Alfa RUB", 1000, "active"),
-    (3, "Deposit Alfa RUB", 1000, "active"),
-    (4, "A Tinkof RUB", 1000, "active"),
-    (5, "J Tinkof RUB", 1000, "active"),
-    (6, "J Tinkof IIS RUB", 1000, "active"),
-    (7, "Binance USD", 1000, "active"),
-    (8, "TrustWallet old USD", 1000, "active"),
-    (9, "TrustWallet new USD", 1000, "active"),
-    (10, "Credit Vitya USD", 1000, "active"),
-    (11, "Cash USD", 1000, "active"),
-    (12, "Cash RSD", 1000, "active"),
-    (13, "Cash EUR", 1000, "active"),
-    (14, "J Bank of Georgia USD", 1000, "active");
+    (1, "Alfa RUB", 1000, "active"),
+    (2, "Tinkof RUB", 2000, "active");

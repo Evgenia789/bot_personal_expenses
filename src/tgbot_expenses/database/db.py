@@ -96,7 +96,6 @@ class Database:
                             f"VALUES ('{account_name}', '{account_amount}', 'active')")
         self.connection.commit()
 
-        # last_id = self.get_id_last_entry(table="bill")
         add_data_to_google_table(
             values=[account_name, account_amount],
             title="test_total_amount"
