@@ -1,6 +1,7 @@
 import sqlite3
 from typing import List, Tuple
 
+from src.tgbot_expenses.config import load_config
 from src.tgbot_expenses.utils.date_formatting import get_now_date
 from src.tgbot_expenses.utils.google_spreadsheet import (
     add_data_to_google_table, update_data_to_google_table)
@@ -10,6 +11,7 @@ class Database:
     __instance = None
     connection = None
     cursor = None
+    config = load_config("bot.ini")
 
     def __new__(cls, *args, **kwargs):
         if cls.__instance is None:
@@ -63,11 +65,12 @@ class Database:
         add_data_to_google_table(
             values=[last_id[0], amount, category_name, bill_name,
                     get_now_date(), initial_amount],
-            title="test_expenses"
+            title=self.config.googletables.table_expenses
         )
         last_amount = self.get_amount(bill_id=bill_id)[0]
-        update_data_to_google_table(title="test_total_amount", row=bill_id,
-                                    column=3, value=float(last_amount))
+        update_data_to_google_table(
+            title=self.config.googletables.table_total_amount, row=bill_id,
+            column=3, value=float(last_amount))
 
     def insert_income(self, bill_name: str, amount: float) -> None:
         """Insert a new entry"""
@@ -84,11 +87,12 @@ class Database:
         last_id = self.get_id_last_entry(table="income")
         add_data_to_google_table(
             values=[last_id[0], amount, bill_name, get_now_date()],
-            title="test_incomes"
+            title=self.config.googletables.table_incomes
         )
         last_amount = self.get_amount(bill_id=bill_id)[0]
-        update_data_to_google_table(title="test_total_amount", row=bill_id,
-                                    column=3, value=float(last_amount))
+        update_data_to_google_table(
+            title=self.config.googletables.table_total_amount, row=bill_id,
+            column=3, value=float(last_amount))
 
     def insert_account(self, account_name: str, account_amount: float) -> None:
         """Insert a new entry"""
@@ -98,7 +102,7 @@ class Database:
 
         add_data_to_google_table(
             values=[account_name, account_amount],
-            title="test_total_amount"
+            title=self.config.googletables.table_total_amount
         )
 
     def insert_category(self, category_name: str, limit_amount: int) -> None:
@@ -163,16 +167,20 @@ class Database:
             values=[bill_from, amount_old_currency, bill_to,
                     currency_amount, get_now_date(),
                     round(currency_amount/amount_old_currency, 4)],
-            title="test_currency"
+            title=self.config.googletables.table_currency
         )
         id = self.fetchone(table="bill", field_name=bill_from)
         last_amount = self.get_amount(bill_id=id)[0]
-        update_data_to_google_table(title="test_total_amount", row=id,
-                                    column=3, value=float(last_amount))
+        update_data_to_google_table(
+            title=self.config.googletables.table_total_amount, row=id,
+            column=3, value=float(last_amount)
+        )
         id = self.fetchone(table="bill", field_name=bill_to)
         last_amount = self.get_amount(bill_id=id)[0]
-        update_data_to_google_table(title="test_total_amount", row=id,
-                                    column=3, value=float(last_amount))
+        update_data_to_google_table(
+            title=self.config.googletables.table_total_amount, row=id,
+            column=3, value=float(last_amount)
+        )
 
         return
 
