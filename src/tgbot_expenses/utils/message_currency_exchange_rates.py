@@ -6,6 +6,7 @@ async def get_message_currency_exchange_rates() -> str:
     """Get a message about the exchange rate"""
     text_message = f"Date: {get_now_date(date_format='%d.%m.%Y %H:%M:%S')}\n\n"
     for currencies in ["EUR/RSD", "USD/RSD", "USD/EUR", "USD/RUB", "EUR/RUB"]:
-        text_message += f"{currencies}: {get_currency_rate(currencies=currencies)}\n"
-    
+        text_message += (f"{currencies}: "
+                         f"{get_currency_rate(currencies=currencies)}\n")
+
     return text_message

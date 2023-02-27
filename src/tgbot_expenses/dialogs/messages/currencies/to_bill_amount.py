@@ -5,10 +5,10 @@ from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
-from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
-                                                   StateInvalid)
 from src.tgbot_expenses.helpers.keyboards.confirmation import \
     get_keyboard_confirmation
+from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
+                                                   StateInvalid)
 
 
 @Bot.message_handler(state=StateCurrencyExchange.ToBillAmount,
@@ -38,12 +38,13 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
 
         await StateCurrencyExchange.next()
 
-        text_message = (f"<b>The bill to transfer money from:</b> {bill_from}\n"
-                    f"<b>Amount:</b> {amount_old_currency}\n"
-                    f"<b>The bill to transfer money to:</b> {bill_to}\n"
-                    f"<b>Amount:</b> {amount}\n"
-                    ) + QuestionText.confirmation
+        text_message = (
+            f"<b>The bill to transfer money from:</b> {bill_from}\n"
+            f"<b>Amount:</b> {amount_old_currency}\n"
+            f"<b>The bill to transfer money to:</b> {bill_to}\n"
+            f"<b>Amount:</b> {amount}\n"
+        ) + QuestionText.confirmation
 
         await Bot.answer(message=message,
-                        text=text_message,
-                        reply_markup=get_keyboard_confirmation())
+                         text=text_message,
+                         reply_markup=get_keyboard_confirmation())
