@@ -3,16 +3,15 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
-from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
                                                    StateInvalid)
-from src.tgbot_expenses.utils.dollar_amount import get_dollar_amount
+from src.tgbot_expenses.helpers.keyboards.confirmation import \
+    get_keyboard_confirmation
 
 
-@Bot.message_handler(state=StateCurrencyExchange.Amount,
+@Bot.message_handler(state=StateCurrencyExchange.ToBillAmount,
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
@@ -32,19 +31,19 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         await message_invalid_amount(message=message, state=state)
     else:
         async with state.proxy() as data:
-            data["amount_old_currency"] = round(amount, 2)
-            data["dollar_amount"] = await get_dollar_amount(
-                bill=data["bill_from"],
-                amount=amount
-            )
+            bill_from = data["bill_from"]
+            amount_old_currency = data["amount_old_currency"]
+            bill_to = data["bill_to"]
+            data["currency_amount"] = round(amount, 2)
 
         await StateCurrencyExchange.next()
 
-        await Bot.answer(
-            message=message,
-            text=QuestionText.to_bill,
-            reply_markup=get_keyboard_question(
-                button_names=database.get_all_bills(),
-                button_back=True
-            )
-        )
+        text_message = (f"<b>The bill to transfer money from:</b> {bill_from}\n"
+                    f"<b>Amount:</b> {amount_old_currency}\n"
+                    f"<b>The bill to transfer money to:</b> {bill_to}\n"
+                    f"<b>Amount:</b> {amount}\n"
+                    ) + QuestionText.confirmation
+
+        await Bot.answer(message=message,
+                        text=text_message,
+                        reply_markup=get_keyboard_confirmation())

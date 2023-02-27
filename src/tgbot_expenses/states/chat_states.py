@@ -35,8 +35,9 @@ class StateCurrencyExchange(StatesGroup):
     StateCurrencyExchange state
     """
     FromBill = State()
-    Amount = State()
+    FromBillAmount = State()
     ToBill = State()
+    ToBillAmount = State()
     DataConfirmation = State()
 
 

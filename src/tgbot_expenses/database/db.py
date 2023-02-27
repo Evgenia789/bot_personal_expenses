@@ -162,7 +162,7 @@ class Database:
         add_data_to_google_table(
             values=[bill_from, amount_old_currency, bill_to,
                     currency_amount, get_now_date(),
-                    round(amount_old_currency/currency_amount, 4)],
+                    round(currency_amount/amount_old_currency, 4)],
             title="test_currency"
         )
         id = self.fetchone(table="bill", field_name=bill_from)

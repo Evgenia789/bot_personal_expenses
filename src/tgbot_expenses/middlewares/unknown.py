@@ -20,7 +20,8 @@ class UnknownMiddleware(BaseMiddleware):
             current_state.split(":")[-1] in ["Amount", "InvalidAmount",
                                              "NewLimit", "AddBill",
                                              "CategoryLimit", "AddCategory",
-                                             "AmountBill"]
+                                             "AmountBill", "FromBillAmount",
+                                             "ToBillAmount"]
         ):
             return None
 
