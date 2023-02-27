@@ -37,7 +37,7 @@ ID_1=""
 ID_2=""
 ```
 
-где TELEGRAM_TOKEN - это токен телеграм полученный у BotFather
+где TELEGRAM_TOKEN - это токен телеграм полученный у BotFather   
     ID_1, ID_2 - это id пользователей которым разрешен доступ к боту
 
 Для занесения данных в гугл таблицу (если необходимо), нужно получить доступ к электронным таблицам через Google Sheets API. Это можно делать согласно: https://github.com/burnash/gspread/blob/master/docs/oauth2.rst
