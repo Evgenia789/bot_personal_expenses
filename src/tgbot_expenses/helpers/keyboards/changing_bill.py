@@ -3,7 +3,16 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 def get_keyboard_changing_bill() -> InlineKeyboardMarkup:
     """
-    Generating a keyboard with changing bill buttons.
+    Returns an InlineKeyboardMarkup object representing a keyboard
+    for changing bill options.
+
+    Returns:
+        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
+                              the generated keyboard.
+
+    Examples:
+        To generate a keyboard for changing bill options, use:
+        >>> keyboard = get_keyboard_changing_bill()
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Add bill",

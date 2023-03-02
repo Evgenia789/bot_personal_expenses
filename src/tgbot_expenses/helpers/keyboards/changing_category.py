@@ -3,7 +3,16 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 def get_keyboard_changing_category() -> InlineKeyboardMarkup:
     """
-    Generating a keyboard with changing category buttons.
+    Returns an InlineKeyboardMarkup object representing a keyboard
+    for changing category options.
+
+    Returns:
+        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
+                              the generated keyboard.
+
+    Examples:
+        To generate a keyboard for changing catrgory options, use:
+        >>> keyboard = get_keyboard_changing_category()
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Add category",

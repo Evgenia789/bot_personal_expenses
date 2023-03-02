@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 class StateChat(StatesGroup):
     """
-    StateChat state
+    Represents the state of a chat conversation.
     """
     MainMenu = State()
     ShowStatistic = State()
@@ -15,7 +15,7 @@ class StateChat(StatesGroup):
 
 class StateSettings(StatesGroup):
     """
-    StateSettings state
+    Represents the state of settings.
     """
     MainMenu = State()
     ChangeLimit = State()
@@ -32,7 +32,7 @@ class StateSettings(StatesGroup):
 
 class StateCurrencyExchange(StatesGroup):
     """
-    StateCurrencyExchange state
+    Represents the state of a chat currency exchange rate.
     """
     FromBill = State()
     FromBillAmount = State()
@@ -43,6 +43,6 @@ class StateCurrencyExchange(StatesGroup):
 
 class StateInvalid(StatesGroup):
     """
-    StateInvalid state
+    Represents the invalid state.
     """
     InvalidAmount = State()

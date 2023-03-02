@@ -3,7 +3,16 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 def get_keyboard_main_menu() -> InlineKeyboardMarkup:
     """
-    Generating a keyboard with main menu buttons.
+    Returns an InlineKeyboardMarkup object representing a keyboard
+    to select main menu buttons.
+
+    Returns:
+        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
+                              the generated keyboard.
+
+    Examples:
+        To generate a keyboard to select main menu buttons, use:
+        >>> keyboard = get_keyboard_main_menu()
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Make expenses",

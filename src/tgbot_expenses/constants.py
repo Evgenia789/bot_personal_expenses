@@ -3,6 +3,9 @@ from dataclasses import dataclass
 
 @dataclass
 class QuestionText:
+    """
+    A dataclass representing the text of a questions. 
+    """
     main_menu = "What do you want to do?"
     category = "Choose a category where your expenses belong"
     bill = "Choose the bill"
