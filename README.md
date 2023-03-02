@@ -35,15 +35,26 @@ TELEGRAM_TOKEN=""
 [allowed_ids]
 ID_1=""
 ID_2=""
+
+[google_tables]
+expenses_table=your_table_name
+incomes_table=your_table_name
+currency_table=your_table_name
+total_amount_table=your_table_name
+
 ```
 
-где TELEGRAM_TOKEN - это токен телеграм полученный у BotFather   
-    ID_1, ID_2 - это id пользователей которым разрешен доступ к боту
+где:
+
+TELEGRAM_TOKEN - это токен телеграм полученный у BotFather
+ID_1, ID_2 - это id пользователей которым разрешен доступ к боту   
 
 Для занесения данных в гугл таблицу (если необходимо), нужно получить доступ к электронным таблицам через Google Sheets API. Это можно делать согласно: https://github.com/burnash/gspread/blob/master/docs/oauth2.rst
 
 ## Авторы
+
 * Evgenia Pankova
 
 ## Лицензия
+
 Этот проект находится под лицензией MIT License - подробности см. в файле LICENSE.
