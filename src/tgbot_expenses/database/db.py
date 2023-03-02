@@ -65,11 +65,11 @@ class Database:
         add_data_to_google_table(
             values=[last_id[0], amount, category_name, bill_name,
                     get_now_date(), initial_amount],
-            title=self.config.googletables.table_expenses
+            title=self.config.googletables.expenses
         )
         last_amount = self.get_amount(bill_id=bill_id)[0]
         update_data_to_google_table(
-            title=self.config.googletables.table_total_amount, row=bill_id,
+            title=self.config.googletables.total_amount, row=bill_id,
             column=3, value=float(last_amount))
 
     def insert_income(self, bill_name: str, amount: float) -> None:
@@ -87,11 +87,11 @@ class Database:
         last_id = self.get_id_last_entry(table="income")
         add_data_to_google_table(
             values=[last_id[0], amount, bill_name, get_now_date()],
-            title=self.config.googletables.table_incomes
+            title=self.config.googletables.incomes
         )
         last_amount = self.get_amount(bill_id=bill_id)[0]
         update_data_to_google_table(
-            title=self.config.googletables.table_total_amount, row=bill_id,
+            title=self.config.googletables.total_amount, row=bill_id,
             column=3, value=float(last_amount))
 
     def insert_account(self, account_name: str, account_amount: float) -> None:
@@ -102,7 +102,7 @@ class Database:
 
         add_data_to_google_table(
             values=[account_name, account_amount],
-            title=self.config.googletables.table_total_amount
+            title=self.config.googletables.total_amount
         )
 
     def insert_category(self, category_name: str, limit_amount: int) -> None:
@@ -167,18 +167,18 @@ class Database:
             values=[bill_from, amount_old_currency, bill_to,
                     currency_amount, get_now_date(),
                     round(currency_amount/amount_old_currency, 4)],
-            title=self.config.googletables.table_currency
+            title=self.config.googletables.currency
         )
         id = self.fetchone(table="bill", field_name=bill_from)
         last_amount = self.get_amount(bill_id=id)[0]
         update_data_to_google_table(
-            title=self.config.googletables.table_total_amount, row=id,
+            title=self.config.googletables.total_amount, row=id,
             column=3, value=float(last_amount)
         )
         id = self.fetchone(table="bill", field_name=bill_to)
         last_amount = self.get_amount(bill_id=id)[0]
         update_data_to_google_table(
-            title=self.config.googletables.table_total_amount, row=id,
+            title=self.config.googletables.total_amount, row=id,
             column=3, value=float(last_amount)
         )
 
