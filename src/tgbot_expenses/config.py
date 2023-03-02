@@ -15,10 +15,10 @@ class AllowedIds:
 
 @dataclass
 class GoogleTableName:
-    table_expenses: str
-    table_incomes: str
-    table_currency: str
-    table_total_amount: str
+    expenses_table: str
+    incomes_table: str
+    currency_table: str
+    total_amount_table: str
 
 
 @dataclass
@@ -34,7 +34,7 @@ def load_config(path: str):
 
     tg_bot = config["tg_bot"]
     ids = config["allowed_ids"]
-    googletables = config["googletables"]
+    googletables = config["google_tables"]
 
     return Config(
         tg_bot=TgBot(
@@ -45,9 +45,9 @@ def load_config(path: str):
             id_2=ids.getint("ID_2")
         ),
         googletables=GoogleTableName(
-            expenses=googletables.get("expenses_table"),
-            incomes=googletables.get("incomes_table"),
-            currency=googletables.get("currency_table"),
-            total_amount=googletables.get("total_amount_table")
+            expenses_table=googletables.get("expenses_table"),
+            incomes_table=googletables.get("incomes_table"),
+            currency_table=googletables.get("currency_table"),
+            total_amount_table=googletables.get("total_amount_table")
         )
     )
