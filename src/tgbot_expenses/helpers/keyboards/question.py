@@ -13,25 +13,31 @@ def get_keyboard_question(button_names: str,
     string as its payload. If 'button_back' is True, an additional "Back"
     button is added to the keyboard which triggers a "back" callback.
 
-    Args:
-        button_names (str): A semicolon-delimited string of button names to
-                            display on the keyboard.
-        button_back (bool, optional): Whether to include a "Back" button on
-                                      the keyboard. Defaults to False.
-
-    Returns:
-        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
-                              the generated keyboard.
-
     Examples:
-        To generate a keyboard for asking a question with three buttons
-        ("Option 1", "Option 2", and "Option 3"), use:
-        >>> keyboard = get_keyboard_question("Option 1;Option 2;Option 3")
 
-        To generate the same keyboard with a "Back" button, use:
-        >>> keyboard = get_keyboard_question(
+        To generate a keyboard for asking a question with three buttons
+        ("Option 1", "Option 2", and "Option 3"):
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_question("Option 1;Option 2;Option 3")
+
+        To generate the same keyboard with a "Back" button:
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_question(
                 "Option 1;Option 2;Option 3", button_back=True
             )
+
+    :param button_names: A semicolon-delimited string of button names to
+                         display on the keyboard.
+    :type button_names: str
+    :param button_back: Whether to include a "Back" button on the keyboard.
+                        Defaults to False.
+    :type button_back: bool, optional
+
+    :return: InlineKeyboardMarkup
     """
     buttons: List[InlineKeyboardButton] = []
     button_names = button_names.split(";")

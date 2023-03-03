@@ -9,8 +9,7 @@ async def get_message_currency_exchange_rates() -> str:
     Asynchronously fetches the current exchange rates for several currency
     pairs and returns a formatted message with the rates and the current date.
 
-    Returns:
-        str: A formatted message with the exchange rates and the current date.
+    :return: str
     """
     currency_pairs = ["EUR to RSD", "USD to RSD", "USD to EUR",
                       "USD to RUB", "EUR to RUB"]

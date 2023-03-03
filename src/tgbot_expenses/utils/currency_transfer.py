@@ -6,18 +6,12 @@ async def get_currency_rate(currencies: str) -> float:
     """
     Get the exchange rate for a currency pair.
 
-    Args:
-        currencies: A string representing the currency pair,
-                    in the format "CURRENCY1 to CURRENCY2".
-
-    Returns:
-        A float representing the current exchange rate for
-        the specified currency pair.
-
-    Raises:
-        ValueError: If the specified currency pair is invalid
-                    or not found on the website.
-
+    :param currencies: A string representing the currency pair, in the format
+                       "CURRENCY1 to CURRENCY2".
+    :type currencies: str
+    :return: float
+    :raises ValueError: If the specified currency pair is invalid or not found
+                        on the website.
     """
     async with aiohttp.ClientSession() as session:
         headers = {'User-Agent': ('Mozilla/5.0 (Macintosh; '

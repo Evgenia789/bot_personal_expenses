@@ -15,7 +15,14 @@ from src.tgbot_expenses.states.chat_states import StateInvalid, StateSettings
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
-    Process a message about the amount.
+    Processes the user's message about the amount entered for the bill.
+
+    :param message: The Message object containing the user's input message.
+    :type message: types.Message
+    :param state: The FSMContext object representing the current state
+                  of the chat.
+    :type state: FSMContext
+    :return: None
     """
     await Bot.delete_messages(chat_id=message.chat.id,
                               last_message_id=message.message_id, count=2)

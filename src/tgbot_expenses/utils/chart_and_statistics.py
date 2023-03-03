@@ -8,7 +8,14 @@ from src.tgbot_expenses.utils.text_statistics import get_data
 
 
 async def get_statistics_and_chart(message: types.Message) -> types.Message:
-    """Send monthly statistics and chart."""
+    """
+    Retrieve monthly expense data from the database, generate a chart
+    and a message containing the data, and send them to the user.
+
+    :param message: The message triggering the function.
+    :type message: types.Message
+    :return: types.Message
+    """
     monthly_expense_data = database.fetchallmonth()
 
     text_message = await get_data(data=monthly_expense_data)

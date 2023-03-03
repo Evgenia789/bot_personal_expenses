@@ -2,7 +2,15 @@ from typing import List, Tuple
 
 
 async def get_data(data: List[Tuple]) -> str:
-    """Get data for statistics"""
+    """
+    Generate a formatted string with the data for the monthly expenses
+    statistics.
+
+    :param data: A list of tuples containing the category name,
+                 the total expense and the expense limit.
+    :type data: List[Tuple[str, float, float]]
+    :return: str
+    """
     text_msg = "\n"
     total_amount = 0
     total_limit = 0

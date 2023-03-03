@@ -17,7 +17,14 @@ from src.tgbot_expenses.states.chat_states import StateInvalid, StateSettings
 async def message_input_new_category(message: types.Message,
                                      state: FSMContext) -> None:
     """
-    Process of input a category limit.
+    Processes a message containing a new category limit input.
+
+    :param message: The Message object containing the user's input message.
+    :type message: types.Message
+    :param state: The FSMContext object representing the current state
+                  of the chat.
+    :type state: FSMContext
+    :return: None
     """
     await Bot.delete_messages(chat_id=message.chat.id,
                               last_message_id=message.message_id, count=2)

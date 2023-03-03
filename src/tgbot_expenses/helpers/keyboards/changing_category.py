@@ -6,13 +6,15 @@ def get_keyboard_changing_category() -> InlineKeyboardMarkup:
     Returns an InlineKeyboardMarkup object representing a keyboard
     for changing category options.
 
-    Returns:
-        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
-                              the generated keyboard.
+    Example:
 
-    Examples:
-        To generate a keyboard for changing catrgory options, use:
-        >>> keyboard = get_keyboard_changing_category()
+        To generate a keyboard for changing catrgory options:
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_changing_category()
+
+    :return: InlineKeyboardMarkup
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Add category",

@@ -6,13 +6,15 @@ def get_keyboard_changing_bill() -> InlineKeyboardMarkup:
     Returns an InlineKeyboardMarkup object representing a keyboard
     for changing bill options.
 
-    Returns:
-        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
-                              the generated keyboard.
+    Example:
 
-    Examples:
-        To generate a keyboard for changing bill options, use:
-        >>> keyboard = get_keyboard_changing_bill()
+        To generate a keyboard for changing bill options:
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_changing_bill()
+
+    :return: InlineKeyboardMarkup
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Add bill",

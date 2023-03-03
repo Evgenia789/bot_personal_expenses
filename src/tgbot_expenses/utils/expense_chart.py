@@ -5,7 +5,15 @@ import matplotlib.pyplot as plt
 
 
 async def get_chart(data: List[Tuple]) -> str:
-    """Get a new chart"""
+    """
+    Generate and save a pie chart of expenses for the current month.
+
+    :param data: A list of tuples containing monthly expense data.
+                 Each tuple should have the following format:
+                 (category_name: str, total: float).
+    :type data: List[Tuple]
+    :return: str
+    """
     path_to_chart = "src/tgbot_expenses/utils/chart/output.png"
     categories = []
     amount = []

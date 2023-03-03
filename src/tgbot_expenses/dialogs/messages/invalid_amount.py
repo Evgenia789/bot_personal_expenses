@@ -13,7 +13,15 @@ from src.tgbot_expenses.states import chat_states
 async def message_invalid_amount(message: types.Message,
                                  state: FSMContext) -> None:
     """
-    Process a message about an invalid amount format.
+    The process of processing an incorrectly entered message by the user.
+
+    :param message: The Message object containing the invalid input message
+                    from the user.
+    :type message: types.Message
+    :param state: The FSMContext object representing the current state
+                  of the chat.
+    :type state: FSMContext
+    :return: None
     """
     await Bot.delete_message(chat_id=message.chat.id,
                              message_id=message.message_id)

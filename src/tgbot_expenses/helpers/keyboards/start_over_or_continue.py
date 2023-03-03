@@ -10,13 +10,15 @@ def get_keyboard_start_over_or_continue() -> InlineKeyboardMarkup:
     allowing users to either return to the main menu or continue with
     their current task.
 
-    Returns:
-        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
-                              the generated keyboard.
+    Example:
 
-    Examples:
-        To generate a keyboard with main menu buttons, use:
-        >>> keyboard = get_keyboard_start_over_or_continue()
+        To generate a keyboard with "Start over" and "Continue" buttons:
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_start_over_or_continue()
+
+    :return: InlineKeyboardMarkup
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Start over",

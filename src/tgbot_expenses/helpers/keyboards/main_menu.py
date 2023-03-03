@@ -6,13 +6,15 @@ def get_keyboard_main_menu() -> InlineKeyboardMarkup:
     Returns an InlineKeyboardMarkup object representing a keyboard
     to select main menu buttons.
 
-    Returns:
-        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
-                              the generated keyboard.
+    Example:
 
-    Examples:
-        To generate a keyboard to select main menu buttons, use:
-        >>> keyboard = get_keyboard_main_menu()
+        To generate a keyboard to select main menu buttons:
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_main_menu()
+
+    :return: InlineKeyboardMarkup
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Make expenses",

@@ -1,11 +1,15 @@
-from typing import Any
+from typing import Any, List, Union
 
 import gspread
 from google.oauth2.service_account import Credentials
 
 
 def get_spreadsheet() -> gspread.Spreadsheet:
-    """Add new data to Google Spreadsheet"""
+    """
+    Add new data to Google Spreadsheet
+
+    :return: None
+    """
     scopes = [
         'https://www.googleapis.com/auth/spreadsheets',
         'https://www.googleapis.com/auth/drive'
@@ -26,11 +30,18 @@ def get_spreadsheet() -> gspread.Spreadsheet:
     return sh
 
 
-def add_data_to_google_table(values: list, title: str) -> None:
+def add_data_to_google_table(values: List[Union[int, str]],
+                             title: str) -> None:
     """
-    Add new data to Google Spreadsheet
+    Add new data to the Google Spreadsheet with the specified title.
 
-    :param list values: List of values for the new row.
+    :param values: A list of values for the new row. The first value can be an
+                   integer index for the new row, or a string representing
+                   a date or other identifier for the data.
+    :type values: List[Union[int, str]]
+    :param title: The title of the worksheet where the data will be added.
+    :type title: str
+    :return: None
     """
     sh = get_spreadsheet()
     worksheet = sh.worksheet(title=title)
@@ -46,6 +57,16 @@ def update_data_to_google_table(title: str, row: int,
                                 column: int, value: Any) -> None:
     """
     Update the data for the specified column in the Google Spreadsheet
+
+    :param title: The title of the worksheet to update.
+    :type title: str
+    :param row: The row number to update.
+    :type row: int
+    :param column: The column number to update.
+    :type column: int
+    :param value: The value to insert at the specified row and column.
+    :type value: Any
+    :return: None
     """
     sh = get_spreadsheet()
     worksheet = sh.worksheet(title=title)

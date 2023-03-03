@@ -12,7 +12,14 @@ from src.tgbot_expenses.states.chat_states import StateChat
 async def send_welcome(message: aiogram.types.Message,
                        state: FSMContext) -> None:
     """
-    Start command handler
+    The process of processing the /start command.
+
+    :param message: The Message object representing the /start command.
+    :type message: aiogram.types.Message
+    :param state: The FSMContext object representing the current state
+                  of the chat.
+    :type state: FSMContext
+    :return: None
     """
     await message.delete()
 

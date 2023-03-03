@@ -6,16 +6,18 @@ def get_keyboard_settings() -> InlineKeyboardMarkup:
     Returns an InlineKeyboardMarkup object representing a settings menu
     with customizable buttons.
 
-    The generated keyboard has buttons for changing the user's limit, bill,
+    The generated keyboard has buttons for changing the category's limit, bill,
     and category, as well as a "Go back to the main menu" button.
 
-    Returns:
-        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
-                              the generated keyboard.
+    Example:
 
-    Examples:
-        To generate a settings menu keyboard, use:
-        >>> keyboard = get_keyboard_settings()
+        To generate a settings menu keyboard:
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_settings()
+
+    :return: InlineKeyboardMarkup
     """
     keyboard = InlineKeyboardMarkup(row_width=3).add(
         InlineKeyboardButton(text="Change limit",

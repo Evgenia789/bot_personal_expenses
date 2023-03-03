@@ -6,13 +6,15 @@ def get_keyboard_confirmation() -> InlineKeyboardMarkup:
     Returns an InlineKeyboardMarkup object representing a keyboard
     for confirming or cancelling an action.
 
-    Returns:
-        InlineKeyboardMarkup: An InlineKeyboardMarkup object representing
-                              the generated keyboard.
+    Example:
 
-    Examples:
-        To generate a keyboard for confirming or cancelling an action, use:
-        >>> keyboard = get_keyboard_confirmation()
+        To generate a keyboard for confirming or cancelling an action:
+
+        .. code-block:: python3
+
+            keyboard = get_keyboard_confirmation()
+
+    :return: InlineKeyboardMarkup
     """
     keyboard = InlineKeyboardMarkup(row_width=2).add(
         InlineKeyboardButton(text="Confirm",
