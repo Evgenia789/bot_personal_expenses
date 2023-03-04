@@ -1,6 +1,6 @@
 # Bot personal expenses
 
-![Alt Text](public\make_expenses.gif)                ![Alt Text](https://file+.vscode-resource.vscode-cdn.net/c%3A/Dev/bot_personal_expenses/public/settings_category.gif)
+![Alt Text](https://github.com/Evgenia789/bot_personal_expenses/blob/main/public/make_expenses.gif)                ![Alt Text](https://github.com/Evgenia789/bot_personal_expenses/blob/main/public/settings_category.gif)
 
 Bot Personal Expenses is a Telegram bot that helps to keep track of personal expenses. It allows you to view your spending statistics for a month, taking into account the limits you set for certain categories. You can also change limits for categories, set or delete accounts to which your expenses will be tied.
 
