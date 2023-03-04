@@ -1,32 +1,34 @@
 # Bot personal expenses
 
-Bot personal expenses позволяет вести учет личных трат. Ты можешь просмотреть статистику своих трат за месяц с учетом установленных тобой лимитов на определенные категории. Также ты можешь изменять лимиты для категорий, задать или удалить счета к которым будут привязаны твои траты.
+Bot Personal Expenses is a Telegram bot that helps to keep track of personal expenses. It allows you to view your spending statistics for a month, taking into account the limits you set for certain categories. You can also change limits for categories, set or delete accounts to which your expenses will be tied.
 
-Все траты заносятся в базу данных с переводом в доллары с учетом актуального курса валют, и также траты заносятся в google таблицу (добавлено для личного пользования)
+All expenses are recorded in a database in dollars, taking into account the current exchange rate, and expenses are also recorded in a Google Spreadsheet (added for personal use).
 
-## Стек технологий
+## Technologies used
 
-* проект написан на Python 3.10 с использованием библиотеки Aiogram
-* база данных - Sqllite
-* для получения актуального курса валют парсим данные из страницы поисковой выдачи Google с помощью модулей requests и BeautifulSoup
+* Python 3.10
+* Aiogram library for creating the Telegram bot
+* SQLite database
+* Requests and BeautifulSoup modules for web scraping to get the current exchange rate of currencies
+* Google Sheets API for recording expenses
 
-## Как запустить проект
+## How to run the project
 
-Клонировать репозиторий и перейти в него в командной строке:
+Clone the repository and navigate to it in the command line:
 
 ```
 git clone https://github.com/Evgenia789/bot_personal_expenses
 cd bot_personal_expenses 
 ```
 
-Создать и активировать виртуальное окружение:
+Create and activate a virtual environment:
 
 ```
 python -m venv venv
 source venv/Scripts/activate
 ```
 
-В дериктории проекта создтье файл bot.ini , в котором необходимо прописать следующее :
+In the project directory, create a `bot.ini` file and add the following:
 
 ```
 [tg_bot]
@@ -44,17 +46,18 @@ total_amount_table=your_table_name
 
 ```
 
-где:
+where:
 
-TELEGRAM_TOKEN - это токен телеграм полученный у BotFather
-ID_1, ID_2 - это id пользователей которым разрешен доступ к боту   
+* `TELEGRAM_TOKEN` is the token obtained from BotFather
+* `ID_1`, `ID_2`, etc. are the IDs of the users who are allowed to use the bot
+* `expenses_table`, `incomes_table`, `currency_table`, `total_amount_table` are the names of the Google Sheets you will use for recording expenses (if you want to use this feature).
 
-Для занесения данных в гугл таблицу (если необходимо), нужно получить доступ к электронным таблицам через Google Sheets API. Это можно делать согласно: https://github.com/burnash/gspread/blob/master/docs/oauth2.rst
+For using Google Sheets API, you need to follow the instructions on this page: [https://github.com/burnash/gspread/blob/master/docs/oauth2.rst](https://github.com/burnash/gspread/blob/master/docs/oauth2.rst)
 
-## Авторы
+## Author
 
-* Evgenia Pankova
+Evgenia Pankova
 
-## Лицензия
+## License
 
-Этот проект находится под лицензией MIT License - подробности см. в файле LICENSE.
+This project is under the MIT License - see the LICENSE file for details.
