@@ -1,14 +1,21 @@
 from typing import Any, List, Union
 
-import gspread
 from google.oauth2.service_account import Credentials
+from gspread_asyncio import (AsyncioGspreadClientManager,
+                             AsyncioGspreadSpreadsheet)
+
+from src.tgbot_expenses.config import load_config
 
 
-def get_spreadsheet() -> gspread.Spreadsheet:
+def get_credentials() -> Credentials:
     """
-    Add new data to Google Spreadsheet
+    Returns Google API credentials required to access a Google Sheets API.
 
-    :return: None
+    This function reads the service account file 'service_account.json' in the
+    specified directory, and returns a `Credentials` object with the necessary
+    authorization information to access the Google Sheets API.
+
+    :return: A `Credentials` object with authorization information.
     """
     scopes = [
         'https://www.googleapis.com/auth/spreadsheets',
@@ -19,19 +26,46 @@ def get_spreadsheet() -> gspread.Spreadsheet:
     # the spreadsheets via the Google Sheets API. You can do it
     # by https://github.com/burnash/gspread/blob/master/docs/oauth2.rst
     credentials = Credentials.from_service_account_file(
-        filename='src/tgbot_expenses/database/service_account.json',
-        scopes=scopes
+        filename='src/tgbot_expenses/database/service_account.json'
     )
+    scoped = credentials.with_scopes(scopes=scopes)
 
-    gc = gspread.authorize(credentials=credentials)
-    # You need to specify the name of your table
-    sh = gc.open(title="Expenses")
+    return scoped
+
+
+def create_agcm_object() -> AsyncioGspreadClientManager:
+    """
+    Creates an `AsyncioGspreadClientManager` object which provides access to
+    the Google Sheets API using asynchronous calls.
+
+    :return: An `AsyncioGspreadClientManager` object.
+    """
+    credentials = get_credentials
+    agcm = AsyncioGspreadClientManager(credentials_fn=credentials)
+
+    return agcm
+
+
+async def get_spreadsheet() -> AsyncioGspreadSpreadsheet:
+    """
+    Returns an AsyncioSpreadsheet object for the specified Google Sheet.
+
+    :param title: The title of the Google Sheet to open.
+    :return: An AsyncioSpreadsheet object.
+    """
+    agcm = create_agcm_object()
+    agc = await agcm.authorize()
+
+    config = load_config("bot.ini")
+    title = config.googletables.spreadsheet
+
+    sh = await agc.open(title=title)
 
     return sh
 
 
-def add_data_to_google_table(values: List[Union[int, str]],
-                             title: str) -> None:
+async def add_data_to_google_table(values: List[Union[int, str]],
+                                   title: str) -> None:
     """
     Add new data to the Google Spreadsheet with the specified title.
 
@@ -43,18 +77,16 @@ def add_data_to_google_table(values: List[Union[int, str]],
     :type title: str
     :return: None
     """
-    sh = get_spreadsheet()
-    worksheet = sh.worksheet(title=title)
+    sh = await get_spreadsheet()
+    worksheet = await sh.worksheet(title=title)
     if isinstance(values[0], int):
-        worksheet.insert_row(values=values, index=values[0]+1)
+        await worksheet.insert_row(values=values, index=values[0]+1)
     else:
-        worksheet.append_row(values=values)
-
-    return
+        await worksheet.append_row(values=values)
 
 
-def update_data_to_google_table(title: str, row: int,
-                                column: int, value: Any) -> None:
+async def update_data_to_google_table(title: str, row: int,
+                                      column: int, value: Any) -> None:
     """
     Update the data for the specified column in the Google Spreadsheet
 
@@ -68,8 +100,6 @@ def update_data_to_google_table(title: str, row: int,
     :type value: Any
     :return: None
     """
-    sh = get_spreadsheet()
-    worksheet = sh.worksheet(title=title)
-    worksheet.update_cell(row=row, col=column, value=value)
-
-    return
+    sh = await get_spreadsheet()
+    worksheet = await sh.worksheet(title=title)
+    await worksheet.update_cell(row=row, col=column, value=value)

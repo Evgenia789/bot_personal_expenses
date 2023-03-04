@@ -40,8 +40,8 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
     else:
         async with state.proxy() as data:
             account_name = data["account_name"]
-            database.insert_account(account_name=account_name,
-                                    account_amount=amount)
+            await database.insert_account(account_name=account_name,
+                                          account_amount=amount)
 
         message = await Bot.answer(message=message,
                                    text=f"Account {account_name} added")

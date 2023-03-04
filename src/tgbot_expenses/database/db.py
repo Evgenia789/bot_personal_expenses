@@ -71,8 +71,8 @@ class Database:
             return
         self._init_db()
 
-    def insert_item(self, category_name: str,
-                    bill_name: str, amount: float, initial_amount: float) -> None:
+    async def insert_item(self, category_name: str,
+                          bill_name: str, amount: float, initial_amount: float) -> None:
         """
         Insert a new financial transaction into the database.
 
@@ -101,17 +101,17 @@ class Database:
         # this code will be used before creating the main application to better
         # display expenses in GoogleSheets
         last_id = self.get_id_last_entry(table="item")
-        add_data_to_google_table(
+        await add_data_to_google_table(
             values=[last_id[0], amount, category_name, bill_name,
                     get_now_date(), initial_amount],
             title=self.config.googletables.expenses
         )
         last_amount = self.get_amount(bill_id=bill_id)[0]
-        update_data_to_google_table(
+        await update_data_to_google_table(
             title=self.config.googletables.total_amount, row=bill_id,
             column=3, value=float(last_amount))
 
-    def insert_income(self, bill_name: str, amount: float) -> None:
+    async def insert_income(self, bill_name: str, amount: float) -> None:
         """
         Inserts a new income entry into the database for a given bill.
 
@@ -134,16 +134,16 @@ class Database:
         # this code will be used before creating the main application to better
         # display expenses in GoogleSheets
         last_id = self.get_id_last_entry(table="income")
-        add_data_to_google_table(
+        await add_data_to_google_table(
             values=[last_id[0], amount, bill_name, get_now_date()],
             title=self.config.googletables.incomes
         )
         last_amount = self.get_amount(bill_id=bill_id)[0]
-        update_data_to_google_table(
+        await update_data_to_google_table(
             title=self.config.googletables.total_amount, row=bill_id,
             column=3, value=float(last_amount))
 
-    def insert_account(self, account_name: str, account_amount: float) -> None:
+    async def insert_account(self, account_name: str, account_amount: float) -> None:
         """
         Insert a new entry into the 'bill' table with the given account name
         and amount.
@@ -161,7 +161,7 @@ class Database:
 
         # this code will be used before creating the main application to better
         # display expenses in GoogleSheets
-        add_data_to_google_table(
+        await add_data_to_google_table(
             values=[account_name, account_amount],
             title=self.config.googletables.total_amount
         )
@@ -260,8 +260,8 @@ class Database:
 
         return
 
-    def update_amount(self, bill_from: str, amount_old_currency: float,
-                      currency_amount: float, bill_to: str) -> None:
+    async def update_amount(self, bill_from: str, amount_old_currency: float,
+                            currency_amount: float, bill_to: str) -> None:
         """
         Update the amount for the specified bills in the 'bill' table.
 
@@ -287,7 +287,7 @@ class Database:
 
         # this code will be used before creating the main application to better
         # display expenses in GoogleSheets
-        add_data_to_google_table(
+        await add_data_to_google_table(
             values=[bill_from, amount_old_currency, bill_to,
                     currency_amount, get_now_date(),
                     round(currency_amount/amount_old_currency, 4)],
@@ -295,13 +295,13 @@ class Database:
         )
         id = self.fetchone(table="bill", field_name=bill_from)
         last_amount = self.get_amount(bill_id=id)[0]
-        update_data_to_google_table(
+        await update_data_to_google_table(
             title=self.config.googletables.total_amount, row=id,
             column=3, value=float(last_amount)
         )
         id = self.fetchone(table="bill", field_name=bill_to)
         last_amount = self.get_amount(bill_id=id)[0]
-        update_data_to_google_table(
+        await update_data_to_google_table(
             title=self.config.googletables.total_amount, row=id,
             column=3, value=float(last_amount)
         )

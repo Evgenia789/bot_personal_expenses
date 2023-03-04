@@ -47,5 +47,6 @@ values
 
 insert into bill (id, name, amount, status)
 values
-    (1, "Alfa RUB", 1000, "active"),
-    (2, "Tinkof RUB", 2000, "active");
+    (1, "Card_1 RUB", 1000, "active"),
+    (2, "Card_2 EUR", 1000, "active"),
+    (3, "Card_3 USD", 1000, "active");

@@ -43,11 +43,13 @@ class GoogleTables:
     Google Sheets tables configuration.
 
     Attributes:
+        spreadsheet (str): Name of the spreadsheet.
         expenses (str): Name of the expenses table.
         incomes (str): Name of the incomes table.
         currency (str): Name of the currency table.
         total_amount (str): Name of the total amount table.
     """
+    spreadsheet: str
     expenses: str
     incomes: str
     currency: str
@@ -73,16 +75,14 @@ def load_config(path: str) -> Config:
     """
     Load the configuration file in ini format located at the given path.
 
-    Args:
-        path (str): The path to the configuration file.
+    :param path: The path to the configuration file.
+    :type path: str
 
-    Returns:
-        A `Config` object containing all the configuration data.
+    :return: A `Config` object containing all the configuration data.
 
-    Raises:
-        MissingSectionHeaderError: If the configuration file is missing
-                                   a section header.
-        ParsingError: If there is an error parsing the configuration file.
+    :raises MissingSectionHeaderError: If the configuration file is missing
+                                       a section header.
+    :raises ParsingError: If there is an error parsing the configuration file.
     """
     config = configparser.ConfigParser()
     config.read(path, encoding="utf-8")
@@ -100,6 +100,7 @@ def load_config(path: str) -> Config:
             id_2=ids.getint("ID_2")
         ),
         googletables=GoogleTables(
+            spreadsheet=googletables.get("spreadsheet"),
             expenses=googletables.get("expenses"),
             incomes=googletables.get("incomes"),
             currency=googletables.get("currency"),

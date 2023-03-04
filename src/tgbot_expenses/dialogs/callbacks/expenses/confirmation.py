@@ -36,13 +36,13 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
         # then the category name will be None
         category = data.get("category")
         if category is not None:
-            database.insert_item(category_name=data["category"],
-                                 bill_name=data["bill"],
-                                 amount=data["amount"],
-                                 initial_amount=data["initial_amount"])
+            await database.insert_item(category_name=data["category"],
+                                       bill_name=data["bill"],
+                                       amount=data["amount"],
+                                       initial_amount=data["initial_amount"])
         else:
-            database.insert_income(bill_name=data["bill"],
-                                   amount=data["amount"])
+            await database.insert_income(bill_name=data["bill"],
+                                         amount=data["amount"])
 
     last_message = await Bot.answer(message=query.message,
                                     text=QuestionText.last_message)
