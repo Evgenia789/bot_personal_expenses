@@ -33,7 +33,7 @@ async def callbacks_back(query: types.CallbackQuery,
     current_state = await Bot.get_current_state()
     current_state_name = current_state.split(":")[-1]
 
-    if current_state_name in ["Bill", "Category"]:
+    if current_state_name in ["Bill", "Category", "FromBill", "ToBill"]:
         await StateChat.MainMenu.set()
         question = QuestionText.main_menu
         keyboard = str(get_keyboard_main_menu())
