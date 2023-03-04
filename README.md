@@ -21,21 +21,21 @@ All expenses are recorded in a database in dollars, taking into account the curr
 
 Clone the repository and navigate to it in the command line:
 
-```
+```bash
 git clone https://github.com/Evgenia789/bot_personal_expenses
 cd bot_personal_expenses 
 ```
 
 Create and activate a virtual environment:
 
-```
+```bash
 python -m venv venv
 source venv/Scripts/activate
 ```
 
 In the project directory, create a `bot.ini` file and add the following:
 
-```
+```ini
 [tg_bot]
 TELEGRAM_TOKEN=""
 
