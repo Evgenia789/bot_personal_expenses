@@ -24,6 +24,10 @@ Bot.dispatch.middleware.setup(LoggingMiddleware())
 
 
 def main():
+    """
+    Initializes the logging configuration, loads the "dialogs" module,
+    and starts the bot by polling for updates.
+    """
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",

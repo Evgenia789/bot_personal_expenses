@@ -13,7 +13,15 @@ from src.tgbot_expenses.states.chat_states import (StateChat,
 async def callbacks_exchange_currency(query: types.CallbackQuery,
                                       state: FSMContext) -> None:
     """
-    The process of starting to fill in currency exchange .
+    A callback function to handle the starting of a currency exchange process.
+    This function is triggered when a user selects the "Exchange currency"
+    option from the main menu.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

@@ -12,7 +12,14 @@ from src.tgbot_expenses.states.chat_states import StateChat
 async def callbacks_make_expenses(query: types.CallbackQuery,
                                   state: FSMContext) -> None:
     """
-    The process of starting to fill in expenses.
+    Handles the 'Make expenses' button press in the main menu,
+    allowing the user to make expenses.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

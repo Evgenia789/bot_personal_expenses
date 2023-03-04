@@ -1,5 +1,6 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from typing import List
+
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 def get_keyboard_question(button_names: str,

@@ -10,7 +10,15 @@ from src.tgbot_expenses.states.chat_states import StateCurrencyExchange
 async def callbacks_get_bill_from(query: types.CallbackQuery,
                                   state: FSMContext) -> None:
     """
-    The process of selecting a bill.
+    A callback function to handle the selection of a bill. This function
+    is triggered when a user selects a bill from the list of available
+    bills.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

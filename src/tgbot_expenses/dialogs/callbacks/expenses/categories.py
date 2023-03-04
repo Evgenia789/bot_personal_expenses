@@ -12,7 +12,15 @@ from src.tgbot_expenses.states.chat_states import StateChat
 async def callbacks_get_category(query: types.CallbackQuery,
                                  state: FSMContext) -> None:
     """
-    The process of selecting a category.
+    A callback function to handle the selection of a category. This function
+    is triggered when a user selects a category from the list of available
+    categories.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

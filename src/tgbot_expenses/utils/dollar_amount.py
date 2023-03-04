@@ -16,6 +16,6 @@ async def get_dollar_amount(bill: str, amount: float) -> float:
     currencies = f'USD to {bill.split(" ")[-1]}'
     currency_rate = 1 \
         if currencies == "USD to USD" \
-        else get_currency_rate(currencies=currencies)
+        else await get_currency_rate(currencies=currencies)
 
     return round(amount / currency_rate, 2)

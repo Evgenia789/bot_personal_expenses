@@ -12,11 +12,37 @@ from src.tgbot_expenses.states.chat_states import StateChat
 
 
 class StartOrContinueMiddleware(BaseMiddleware):
-    """Start or continue middleware"""
+    """
+    Middleware to handle the '/start' command and the 'start_over' and
+    'continue' buttons.
+
+    If the current state is None and a message with the '/start' command is
+    received, the middleware will delete the message and send a welcome message
+    with the 'Start over' or 'Continue' buttons.
+
+    If a callback query with 'start_over' or 'continue' is received, the
+    middleware will delete the previous message and reset the state to the
+    main menu (if 'start_over' is selected). Then, it will send the
+    corresponding message and keyboard.
+
+    If the current state is not None and the message is not a '/start' command,
+    the middleware does nothing.
+    """
     async def on_pre_process_message(self, message: types.Message,
                                      data: dict) -> None:
         """
-        On pre process messages
+        On pre process messages, check if the message is a "/start" command
+        and there is a current state set for the user. If yes, delete the
+        "/start" message, send a new message with a predefined text and a
+        custom keyboard, and raise a CancelHandler exception to interrupt
+        the further processing of the message.
+
+        :param message: The incoming message.
+        :type message: types.Message
+        :param data: Additional data.
+        :type data: dict
+        :raises CancelHandler: If the message is a "/start" command and there
+                               is a current state set for the user.
         """
         current_state = await Bot.get_current_state()
 
@@ -37,7 +63,20 @@ class StartOrContinueMiddleware(BaseMiddleware):
     async def on_pre_process_callback_query(self, query: types.CallbackQuery,
                                             data: dict) -> None:
         """
-        On pre process callback query
+        On pre process callback query. If the callback query data
+        is "start_over" or "continue", the corresponding message is deleted and
+        the current state data is reset if the data is "start_over". The state
+        is set to `StateChat.MainMenu`, and a new message is sent with the main
+        menu options. Finally, a `CancelHandler` is raised to prevent further
+        processing of the callback query.
+
+        :param query: The callback query object
+        :type query: types.CallbackQuery
+        :param data: Additional data.
+        :type data: dict
+        :raises CancelHandler: Raised if the user clicks the "start over" or
+                               "continue" button, in order to cancel further
+                               processing of the callback query.
         """
         current_state = Bot.dispatch.current_state()
 

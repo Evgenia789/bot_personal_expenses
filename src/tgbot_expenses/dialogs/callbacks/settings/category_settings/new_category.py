@@ -13,7 +13,14 @@ from src.tgbot_expenses.states.chat_states import StateSettings
 async def callbacks_add_new_category(query: types.CallbackQuery,
                                      state: FSMContext) -> None:
     """
-    The process of adding a new category.
+    Handles the 'Add category' button press in the category change menu,
+    allowing the user to add a new category to the list.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

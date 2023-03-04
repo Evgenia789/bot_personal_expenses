@@ -13,7 +13,14 @@ from src.tgbot_expenses.utils.message_currency_exchange_rates import \
 async def callbacks_currency_rates(query: types.CallbackQuery,
                                    state: FSMContext) -> None:
     """
-    The process of displaying currency exchange rates.
+    Handles the 'Currency rates' button press in the main menu, displaying
+    current currency exchange rates to the user.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

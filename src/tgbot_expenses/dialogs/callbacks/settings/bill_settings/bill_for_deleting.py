@@ -12,7 +12,14 @@ from src.tgbot_expenses.states.chat_states import StateSettings
 async def callbacks_get_bill_for_deletting(query: types.CallbackQuery,
                                            state: FSMContext) -> None:
     """
-    The process of selecting a bill to delete.
+    Handles the 'Delete bill' button press in the bill change menu,
+    allowing the user to delete a bill to the list.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

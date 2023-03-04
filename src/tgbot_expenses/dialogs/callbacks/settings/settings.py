@@ -11,7 +11,14 @@ from src.tgbot_expenses.states.chat_states import StateChat, StateSettings
 async def callbacks_change_settings(query: types.CallbackQuery,
                                     state: FSMContext) -> None:
     """
-    The process of changing settings.
+    Handles the 'Settings' button press in the main menu, displaying
+    settings which the user can change.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

@@ -19,7 +19,14 @@ from src.tgbot_expenses.states.chat_states import StateChat, StateSettings
 async def callbacks_back(query: types.CallbackQuery,
                          state: FSMContext) -> None:
     """
-    The process of going back.
+    Handles the 'back' button press in various states of the conversation,
+    allowing the user to navigate to the previous screen.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

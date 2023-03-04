@@ -12,7 +12,14 @@ from src.tgbot_expenses.states.chat_states import StateSettings
 async def callbacks_get_category_to_change_limit(query: types.CallbackQuery,
                                                  state: FSMContext) -> None:
     """
-    The process of selecting a category.
+    Handles the selection of a category in the change limit menu, allowing
+    the user to set a new spending limit for that category.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 

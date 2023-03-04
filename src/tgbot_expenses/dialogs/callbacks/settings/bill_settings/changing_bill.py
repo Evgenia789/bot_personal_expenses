@@ -12,7 +12,14 @@ from src.tgbot_expenses.states.chat_states import StateSettings
 async def callbacks_change_bill(query: types.CallbackQuery,
                                 state: FSMContext) -> None:
     """
-    The process of changing the bill.
+    Handles the 'Change bill' button press in the settings menu,
+    allowing the user to change a bill to the list.
+
+    :param query: The query object representing the button press.
+    :type query: types.CallbackQuery
+    :param state: The current state of the conversation.
+    :type state: FSMContext
+    :return: None
     """
     await query.message.delete()
 
