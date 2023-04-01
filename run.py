@@ -23,7 +23,7 @@ Bot.dispatch.middleware.setup(AuthorizationMiddleware())
 Bot.dispatch.middleware.setup(LoggingMiddleware())
 
 
-def main():
+async def main():
     """
     Initializes the logging configuration, loads the "dialogs" module,
     and starts the bot by polling for updates.
@@ -36,9 +36,10 @@ def main():
         filemode='w'
     )
     logger.error("Starting bot")
-    # loop = asyncio.get_running_loop()
-    # await loop.run_in_executor(None, load_module, "dialogs", os.path.abspath("src"))
-    load_module("dialogs", cur_dir=os.path.abspath("src"))
+
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, load_module, "dialogs",
+                               os.path.abspath("src"))
 
     executor.start_polling(bot, skip_updates=False)
 
