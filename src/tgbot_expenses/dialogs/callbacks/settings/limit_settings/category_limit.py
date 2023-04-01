@@ -25,7 +25,9 @@ async def callbacks_get_category_to_change_limit(query: types.CallbackQuery,
 
     await StateSettings.NewLimit.set()
 
-    limit_category = database.get_category_limit(category_name=query.data)
+    limit_category = database.get_category_limit(
+        category_name=query.data
+    )
 
     async with state.proxy() as data:
         data["current_category"] = query.data

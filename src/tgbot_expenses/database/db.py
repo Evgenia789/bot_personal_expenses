@@ -19,7 +19,6 @@ class Database:
     def __new__(cls, *args, **kwargs):
         """
         Create a singleton instance of the Database class.
-
         :return: A singleton instance of the Database class.
         """
         if cls.__instance is None:
@@ -30,7 +29,6 @@ class Database:
         """
         Initialize a connection to the SQLite database and create it
         if it doesn't exist.
-
         :return: None
         """
         self.connection = sqlite3.connect(
@@ -42,7 +40,6 @@ class Database:
     def __call__(self, *args, **kwargs):
         """
         Return the database cursor object.
-
         :param args: Arguments to be passed to the __init__ method.
         :param kwargs: Keyword arguments to be passed to the __init__ method.
         :return: Cursor object for the database connection.
@@ -75,7 +72,6 @@ class Database:
                           bill_name: str, amount: float, initial_amount: float) -> None:
         """
         Insert a new financial transaction into the database.
-
         :param category_name: The name of the category of the transaction.
         :type category_name: str
         :param bill_name: The name of the bill from which the transaction
@@ -114,7 +110,6 @@ class Database:
     async def insert_income(self, bill_name: str, amount: float) -> None:
         """
         Inserts a new income entry into the database for a given bill.
-
         :param bill_name: The name of the bill for which to insert the income.
         :type bill_name: str
         :param amount: The amount of the income to insert.
@@ -147,7 +142,6 @@ class Database:
         """
         Insert a new entry into the 'bill' table with the given account name
         and amount.
-
         :param account_name: The name of the account to insert.
         :type account_name: str
         :param account_amount: The amount associated with the account
@@ -169,7 +163,6 @@ class Database:
     def insert_category(self, category_name: str, limit_amount: int) -> None:
         """
         Insert a new category entry into the 'category' table with the given name and limit amount.
-
         :param category_name: The name of the category to insert.
         :type category_name: str
         :param limit_amount: The limit amount for the category to insert.
@@ -184,7 +177,6 @@ class Database:
         """
         Retrieve the limit amount for the given category from
         the 'category' table.
-
         :param category_name: The name of the category to retrieve
                               the limit amount for.
         :type category_name: str
@@ -199,7 +191,6 @@ class Database:
     def get_id_last_entry(self, table: str) -> int:
         """
         Retrieve the id of the last entry in the given table.
-
         :param table: The name of the table to retrieve the id from.
         :type table: str
         :return: The id of the last entry in the table.
@@ -211,7 +202,6 @@ class Database:
         """
         Retrieve the amount associated with the given bill ID from
         the 'bill' table.
-
         :param bill_id: The ID of the bill to retrieve the amount for.
         :type bill_id: int
         :return: The amount associated with the bill.
@@ -222,7 +212,6 @@ class Database:
     def get_all_bills(self) -> str:
         """
         Retrieve the names of all active bills from the 'bill' table.
-
         :return: A string containing the names of all active bills,
                  separated by semicolons.
         """
@@ -234,7 +223,6 @@ class Database:
     def get_all_categories(self) -> str:
         """
         Retrieve the names of all categories from the 'category' table.
-
         :return: A string containing the names of all categories,
                  separated by semicolons.
         """
@@ -246,7 +234,6 @@ class Database:
     def update_limit(self, category_name: str, new_limit: int) -> None:
         """
         Update the limit amount for the given category in the 'category' table.
-
         :param category_name: The name of the category to update.
         :type category_name: str
         :param new_limit: The new limit amount to set for the category.
@@ -264,7 +251,6 @@ class Database:
                             currency_amount: float, bill_to: str) -> None:
         """
         Update the amount for the specified bills in the 'bill' table.
-
         :param bill_from: The name of the bill to subtract the old amount from.
         :type bill_from: str
         :param amount_old_currency: The old amount in the original currency to
@@ -312,7 +298,6 @@ class Database:
         """
         Update the status of the specified bill to 'archive'
         in the 'bill' table.
-
         :param bill_name: The name of the bill to be archived.
         :type bill_name: str
         :return: None
@@ -328,7 +313,6 @@ class Database:
         """
         Update the status of the specified category to 'archive'
         in the 'category' table.
-
         :param category_name: The name of the category to be archived.
         :type category_name: str
         :return: None
@@ -344,7 +328,6 @@ class Database:
         """
         Retrieve the ID associated with the given field name
         from the specified table.
-
         :param table: The name of the table to retrieve the ID from.
         :type table: str
         :param field_name: The name of the field to retrieve the ID for.
@@ -358,7 +341,6 @@ class Database:
     def fetchall(self, table: str, columns: List[str]) -> List[Tuple]:
         """
         Retrieve all rows and columns from the specified table in the database.
-
         :param table: The name of the table to retrieve data from.
         :type table: str
         :param columns: The list of column names to retrieve data for.
@@ -380,7 +362,6 @@ class Database:
         """
         Retrieve all the data for the current month
         from the 'item' and 'category' tables.
-
         :return: A list of dictionaries containing the category name,
                  limit amount, total expenses for the month,
                  and the current month.

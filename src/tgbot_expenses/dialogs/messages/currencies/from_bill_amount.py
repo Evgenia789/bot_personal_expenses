@@ -33,7 +33,7 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
     except ValueError:
         async with state.proxy() as data:
             data["previous_question"] = QuestionText.amount
-            data["state"] = await state.get_state()
+            data["state"] = state.get_state()
 
         await StateInvalid.InvalidAmount.set()
         await message_invalid_amount(message=message, state=state)

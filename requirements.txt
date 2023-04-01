@@ -2,3 +2,4 @@ aiogram==2.25.1
 beautifulsoup4==4.11.2
 gspread_asyncio==1.8.0
 matplotlib==3.6.3
+aiosqlite==0.18.0
