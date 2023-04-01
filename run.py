@@ -36,7 +36,9 @@ def main():
         filemode='w'
     )
     logger.error("Starting bot")
-    load_module("dialogs", cur_dir=os.path.abspath("src"))
+    # loop = asyncio.get_running_loop()
+    # await loop.run_in_executor(None, load_module, "dialogs", os.path.abspath("src"))
+    load_module("dialogs", cur_dir=os.path.abspath("src"))  # move
 
     executor.start_polling(bot, skip_updates=False)
 
