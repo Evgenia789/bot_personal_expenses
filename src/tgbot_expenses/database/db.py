@@ -50,6 +50,7 @@ class AsyncPostgresDB:
                                              autoflush=False,
                                              bind=self.engine,
                                              class_=AsyncSession)
+            self.create_tables()
 
     async def get_session(self):
         """
