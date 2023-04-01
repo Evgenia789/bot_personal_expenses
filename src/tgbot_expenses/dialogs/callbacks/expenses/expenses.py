@@ -25,11 +25,13 @@ async def callbacks_make_expenses(query: types.CallbackQuery,
 
     await StateChat.Category.set()
 
+    categories = await database.get_all_categories()
+
     await Bot.answer(
         message=query.message,
         text=QuestionText.category,
         reply_markup=get_keyboard_question(
-            button_names=database.get_all_categories(),
+            button_names=categories,
             button_back=True
         )
     )

@@ -7,12 +7,12 @@ from src.tgbot_expenses.states.chat_states import StateCurrencyExchange
 
 
 @Bot.callback_query_handler(state=StateCurrencyExchange.ToBill)
-async def callbacks_get_bill_to(query: types.CallbackQuery,
-                                state: FSMContext) -> None:
+async def callbacks_get_account_to(query: types.CallbackQuery,
+                                   state: FSMContext) -> None:
     """
-    A callback function to handle the selection of a bill. This function
-    is triggered when a user selects a bill from the list of available
-    bills.
+    A callback function to handle the selection of an account. This function
+    is triggered when a user selects an account from the list of available
+    accounts.
 
     :param query: The query object representing the button press.
     :type query: types.CallbackQuery
@@ -23,7 +23,7 @@ async def callbacks_get_bill_to(query: types.CallbackQuery,
     await query.message.delete()
 
     async with state.proxy() as data:
-        data["bill_to"] = query.data
+        data["account_to"] = query.data
 
     await StateCurrencyExchange.next()
 

@@ -241,8 +241,8 @@ class AsyncPostgresDB:
             )
 
     async def update_amount(self, account_from: str,
-                            amount_old_currency: float,
-                            currency_amount: float, account_to: str) -> None:
+                            amount_old_currency: Decimal,
+                            currency_amount: Decimal, account_to: str) -> None:
         """
         Update the amount for the specified account in the 'accounts' table.
 
@@ -251,10 +251,10 @@ class AsyncPostgresDB:
         :type account_from: str
         :param amount_old_currency: The old amount in the original currency to
                                     subtract from the 'account_from'.
-        :type amount_old_currency: float
+        :type amount_old_currency: Decimal
         :param currency_amount: The amount in the new currency to add
                                 to the 'account_to'.
-        :type currency_amount: float
+        :type currency_amount: Decimal
         :param account_to: The name of the account to add the new amount to.
         :type account_to: str
         :return: None

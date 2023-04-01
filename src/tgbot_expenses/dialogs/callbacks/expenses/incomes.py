@@ -25,11 +25,12 @@ async def callbacks_make_incomes(query: types.CallbackQuery,
 
     await StateChat.Bill.set()
 
+    accounts = await database.get_all_accounts()
     await Bot.answer(
         message=query.message,
         text=QuestionText.bill,
         reply_markup=get_keyboard_question(
-            button_names=database.get_all_bills(),
+            button_names=accounts,
             button_back=True
         )
     )

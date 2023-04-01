@@ -7,12 +7,12 @@ from src.tgbot_expenses.states.chat_states import StateChat
 
 
 @Bot.callback_query_handler(state=StateChat.Bill)
-async def callbacks_get_bill(query: types.CallbackQuery,
-                             state: FSMContext) -> None:
+async def callbacks_get_account(query: types.CallbackQuery,
+                                state: FSMContext) -> None:
     """
-    A callback function to handle the selection of a bill. This function
-    is triggered when a user selects a bill from the list of available
-    bills.
+    A callback function to handle the selection of an account. This function
+    is triggered when a user selects an account from the list of available
+    accounts.
 
     :param query: The query object representing the button press.
     :type query: types.CallbackQuery
@@ -23,7 +23,7 @@ async def callbacks_get_bill(query: types.CallbackQuery,
     await query.message.delete()
 
     async with state.proxy() as data:
-        data["bill"] = query.data
+        data["account"] = query.data
 
     await StateChat.next()
 

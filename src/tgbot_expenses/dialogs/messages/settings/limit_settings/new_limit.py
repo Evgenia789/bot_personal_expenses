@@ -42,8 +42,8 @@ async def message_set_new_limit(message: types.Message,
         async with state.proxy() as data:
             current_category = data["current_category"]
 
-        database.update_limit(category_name=current_category,
-                              new_limit=message.text)
+        await database.update_monthly_limit(category_name=current_category,
+                                            new_limit=message.text)
 
         last_message = await Bot.answer(
             message=message,

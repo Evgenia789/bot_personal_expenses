@@ -48,8 +48,9 @@ async def callbacks_back(query: types.CallbackQuery,
                 await StateSettings.MainMenu.set()
         elif current_state_name == "NewLimit":
             question = QuestionText.limits
+            categories = await database.get_all_categories()
             keyboard = get_keyboard_question(
-                button_names=(database.get_all_categories()),
+                button_names=(categories),
                 button_back=True
             )
         elif current_state_name in ["AddBill", "DeleteBill"]:

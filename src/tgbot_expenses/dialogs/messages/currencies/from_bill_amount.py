@@ -43,11 +43,12 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
 
         await StateCurrencyExchange.next()
 
+        accounts = await database.get_all_accounts()
         await Bot.answer(
             message=message,
             text=QuestionText.to_bill,
             reply_markup=get_keyboard_question(
-                button_names=database.get_all_bills(),
+                button_names=accounts,
                 button_back=True
             )
         )

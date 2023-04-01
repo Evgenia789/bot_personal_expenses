@@ -24,7 +24,7 @@ async def callbacks_delete_category(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    database.archive_category(category_name=query.data)
+    await database.archive_category(category_name=query.data)
 
     last_message = await Bot.answer(
         message=query.message,

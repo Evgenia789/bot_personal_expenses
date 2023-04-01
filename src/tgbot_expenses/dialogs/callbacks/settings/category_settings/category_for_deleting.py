@@ -26,11 +26,12 @@ async def callbacks_get_category_for_deleting(query: types.CallbackQuery,
 
     await StateSettings.DeleteCategory.set()
 
+    categories = await database.get_all_categories()
     await Bot.answer(
         message=query.message,
         text=QuestionText.archive_category,
         reply_markup=str(get_keyboard_question(
-            database.get_all_categories(),
+            categories,
             button_back=True
         ))
     )

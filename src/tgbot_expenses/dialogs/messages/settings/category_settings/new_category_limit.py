@@ -49,8 +49,8 @@ async def message_input_new_category(message: types.Message,
         async with state.proxy() as data:
             name_new_category = data["category_name"]
 
-        database.insert_category(category_name=name_new_category,
-                                 limit_amount=limit)
+        await database.insert_category(category_name=name_new_category,
+                                       monthly_limit=limit)
 
         message = await Bot.answer(
             message=message,

@@ -26,7 +26,7 @@ async def callbacks_delete_bill(query: types.CallbackQuery,
 
     await StateSettings.next()
 
-    database.archive_bill(bill_name=query.data)
+    await database.archive_account(account_name=query.data)
 
     last_message = await Bot.answer(
         message=query.message,

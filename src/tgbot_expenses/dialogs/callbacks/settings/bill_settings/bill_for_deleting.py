@@ -25,11 +25,12 @@ async def callbacks_get_bill_for_deletting(query: types.CallbackQuery,
 
     await StateSettings.DeleteBill.set()
 
+    accounts = await database.get_all_accounts()
     await Bot.answer(
         message=query.message,
         text=QuestionText.archive_bill,
         reply_markup=str(get_keyboard_question(
-            database.get_all_bills(),
+            accounts,
             button_back=True
         ))
     )

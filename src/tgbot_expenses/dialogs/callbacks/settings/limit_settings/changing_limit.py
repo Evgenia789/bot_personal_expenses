@@ -25,11 +25,12 @@ async def callbacks_change_limit(query: types.CallbackQuery,
 
     await StateSettings.ChangeLimit.set()
 
+    categories = await database.get_all_categories()
     await Bot.answer(
         message=query.message,
         text=QuestionText.limits,
         reply_markup=get_keyboard_question(
-            button_names=(database.get_all_categories()),
+            button_names=(categories),
             button_back=True
         )
     )
