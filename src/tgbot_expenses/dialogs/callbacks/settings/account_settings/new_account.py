@@ -8,12 +8,13 @@ from src.tgbot_expenses.helpers.keyboards.back_or_main_menu import \
 from src.tgbot_expenses.states.chat_states import StateSettings
 
 
-@Bot.callback_query_handler(text="add_bill", state=StateSettings.ChangeBill)
-async def callbacks_add_new_bill(query: types.CallbackQuery,
-                                 state: FSMContext) -> None:
+@Bot.callback_query_handler(text="add_account",
+                            state=StateSettings.ChangeAccount)
+async def callbacks_add_new_account(query: types.CallbackQuery,
+                                    state: FSMContext) -> None:
     """
-    Handles the 'Add bill' button press in the bill change menu,
-    allowing the user to add a bill to the list.
+    Handles the 'Add account' button press in the account change menu,
+    allowing the user to add an account to the list.
 
     :param query: The query object representing the button press.
     :type query: types.CallbackQuery
@@ -23,11 +24,11 @@ async def callbacks_add_new_bill(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    await StateSettings.AddBill.set()
+    await StateSettings.AddAccount.set()
 
     await Bot.answer(
         message=query.message,
-        text=QuestionText.new_bill,
+        text=QuestionText.new_account,
         reply_markup=str(get_keyboard_back_or_main_menu(
             main_menu_button=False
         ))

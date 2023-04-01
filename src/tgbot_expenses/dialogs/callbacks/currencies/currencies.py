@@ -25,12 +25,12 @@ async def callbacks_exchange_currency(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    await StateCurrencyExchange.FromBill.set()
+    await StateCurrencyExchange.FromAccount.set()
 
     accounts = await database.get_all_accounts()
     await Bot.answer(
         message=query.message,
-        text=QuestionText.from_bill,
+        text=QuestionText.from_account,
         reply_markup=get_keyboard_question(
             button_names=accounts,
             button_back=True

@@ -6,7 +6,7 @@ from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.states.chat_states import StateChat
 
 
-@Bot.callback_query_handler(state=StateChat.Bill)
+@Bot.callback_query_handler(state=StateChat.Account)
 async def callbacks_get_account(query: types.CallbackQuery,
                                 state: FSMContext) -> None:
     """

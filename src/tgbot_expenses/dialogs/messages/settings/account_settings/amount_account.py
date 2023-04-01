@@ -11,11 +11,11 @@ from src.tgbot_expenses.dialogs.messages.settings.beginning import \
 from src.tgbot_expenses.states.chat_states import StateInvalid, StateSettings
 
 
-@Bot.message_handler(state=StateSettings.AmountBill,
+@Bot.message_handler(state=StateSettings.AmountAccount,
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
-    Processes the user's message about the amount entered for the bill.
+    Processes the user's message about the amount entered for the account.
 
     :param message: The Message object containing the user's input message.
     :type message: types.Message

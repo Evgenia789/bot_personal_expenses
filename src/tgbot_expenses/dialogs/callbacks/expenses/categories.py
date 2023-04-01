@@ -33,7 +33,7 @@ async def callbacks_get_category(query: types.CallbackQuery,
 
     await Bot.answer(
         message=query.message,
-        text=QuestionText.bill,
+        text=QuestionText.account,
         reply_markup=get_keyboard_question(
             button_names=accounts
         )

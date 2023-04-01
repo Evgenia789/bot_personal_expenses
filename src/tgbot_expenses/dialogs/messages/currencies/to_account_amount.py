@@ -11,11 +11,11 @@ from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
                                                    StateInvalid)
 
 
-@Bot.message_handler(state=StateCurrencyExchange.ToBillAmount,
+@Bot.message_handler(state=StateCurrencyExchange.ToAccountAmount,
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
-    Processes the user's message about the amount entered for the bill
+    Processes the user's message about the amount entered for the account
     to which the money is being converted
 
     :param message: The Message object containing the user's input message.
@@ -39,17 +39,17 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         await message_invalid_amount(message=message, state=state)
     else:
         async with state.proxy() as data:
-            bill_from = data["bill_from"]
+            account_from = data["account_from"]
             amount_old_currency = data["amount_old_currency"]
-            bill_to = data["bill_to"]
+            account_to = data["account_to"]
             data["currency_amount"] = round(amount, 2)
 
         await StateCurrencyExchange.next()
 
         text_message = (
-            f"<b>The bill to transfer money from:</b> {bill_from}\n"
+            f"<b>The account to transfer money from:</b> {account_from}\n"
             f"<b>Amount:</b> {amount_old_currency}\n"
-            f"<b>The bill to transfer money to:</b> {bill_to}\n"
+            f"<b>The account to transfer money to:</b> {account_to}\n"
             f"<b>Amount:</b> {amount}\n"
         ) + QuestionText.confirmation
 

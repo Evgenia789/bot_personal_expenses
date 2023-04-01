@@ -34,10 +34,11 @@ class UnknownMiddleware(BaseMiddleware):
         # If the chat is in a conversation flow, do not handle unknown messages
         if current_state is None or (
             current_state.split(":")[-1] in ["Amount", "InvalidAmount",
-                                             "NewLimit", "AddBill",
+                                             "NewLimit", "AddAccount",
                                              "CategoryLimit", "AddCategory",
-                                             "AmountBill", "FromBillAmount",
-                                             "ToBillAmount"]
+                                             "AmountAccount",
+                                             "FromAccountAmount",
+                                             "ToAccountAmount"]
         ):
             return None
 

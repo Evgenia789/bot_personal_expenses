@@ -11,11 +11,11 @@ from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
                                                    StateInvalid)
 
 
-@Bot.message_handler(state=StateCurrencyExchange.FromBillAmount,
+@Bot.message_handler(state=StateCurrencyExchange.FromAccountAmount,
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
-    Processes the user's message about the amount entered for the bill
+    Processes the user's message about the amount entered for the account
     from which the money is being converted.
 
     :param message: The Message object containing the user's input message.
@@ -46,7 +46,7 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         accounts = await database.get_all_accounts()
         await Bot.answer(
             message=message,
-            text=QuestionText.to_bill,
+            text=QuestionText.to_account,
             reply_markup=get_keyboard_question(
                 button_names=accounts,
                 button_back=True

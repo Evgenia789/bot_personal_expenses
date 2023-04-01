@@ -8,12 +8,13 @@ from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.states.chat_states import StateSettings
 
 
-@Bot.callback_query_handler(text="delete_bill", state=StateSettings.ChangeBill)
-async def callbacks_get_bill_for_deletting(query: types.CallbackQuery,
-                                           state: FSMContext) -> None:
+@Bot.callback_query_handler(text="delete_account",
+                            state=StateSettings.ChangeAccount)
+async def callbacks_get_account_for_deletting(query: types.CallbackQuery,
+                                              state: FSMContext) -> None:
     """
-    Handles the 'Delete bill' button press in the bill change menu,
-    allowing the user to delete a bill to the list.
+    Handles the 'Delete account' button press in the account change menu,
+    allowing the user to delete an account to the list.
 
     :param query: The query object representing the button press.
     :type query: types.CallbackQuery
@@ -23,12 +24,12 @@ async def callbacks_get_bill_for_deletting(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    await StateSettings.DeleteBill.set()
+    await StateSettings.DeleteAccount.set()
 
     accounts = await database.get_all_accounts()
     await Bot.answer(
         message=query.message,
-        text=QuestionText.archive_bill,
+        text=QuestionText.archive_account,
         reply_markup=str(get_keyboard_question(
             accounts,
             button_back=True
