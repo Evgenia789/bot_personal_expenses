@@ -1,10 +1,9 @@
 from decimal import Decimal
 from typing import List, Tuple
 
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.sql import extract, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import extract, func
 
 from src.tgbot_expenses.config import load_config
 from src.tgbot_expenses.models.expense_tracking_models import (Account, Base,
@@ -12,21 +11,24 @@ from src.tgbot_expenses.models.expense_tracking_models import (Account, Base,
                                                                Expense, Income)
 
 
+class AsyncSessionWithEnter(AsyncSession):
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, traceback):
+        await super().__aexit__(exc_type, exc_val, traceback)
+
+
 class AsyncPostgresDB:
     """
     An asynchronous database client for PostgreSQL.
 
     Attributes:
-        db_url (str): The URL for connecting to the PostgreSQL database.
-        engine (sqlalchemy.engine.Engine): The SQLAlchemy engine object
-                                           for the database.
-        SessionLocal (sqlalchemy.orm.session.sessionmaker): The SQLAlchemy
-                                                            sessionmaker object
-                                                            for the database.
+        engine (AsyncEngine): The asynchronous SQLAlchemy engine
+                              object for the database.
     """
     _instance = None
     engine = None
-    SessionLocal = None
     config = load_config("bot.ini")
 
     def __new__(cls, *args, **kwargs):
@@ -44,52 +46,25 @@ class AsyncPostgresDB:
         Initializes a new instance of the AsyncPostgresDB class.
         """
         if self.engine is None:
-            self.db_url = self.config.postgres_db.db_url
-            self.engine = create_engine(self.db_url, echo=True, future=True)
-            self.SessionLocal = sessionmaker(autocommit=False,
-                                             autoflush=False,
-                                             bind=self.engine,
-                                             class_=AsyncSession)
-            self.create_tables()
+            self.engine = create_async_engine(
+                url=self.config.postgres_db.db_url,
+                echo=True
+            )
 
-    async def get_session(self):
-        """
-        Creates a new session for interacting with the database.
-
-        Yields:
-            sqlalchemy.ext.asyncio.AsyncSession: The new session object.
-        """
-        async with self.engine.begin() as conn:
-            session = self.SessionLocal(bind=conn)
-            try:
-                yield session
-                await session.commit()
-            except Exception as e:
-                await session.rollback()
-                raise e
-            finally:
-                await session.close()
-
-    def __call__(self) -> "AsyncPostgresDB":
+    async def __call__(self, *args, **kwargs):
         """
         Returns the singleton instance of the AsyncPostgresDB class.
         """
-        if self._instance is None:
-            self._instance = AsyncPostgresDB()
-        return self._instance
+        self.__init__(*args, **kwargs)
+        return self.engine
 
     async def create_tables(self):
         """
         Creates the Category, Income, Expense, and Account tables
         if they do not exist.
         """
-        async with self.get_session() as session:
-            for table in [Category.__table__, Income.__table__,
-                          Expense.__table__, Account.__table__]:
-                exists = await session.run_sync(table.exists)
-                if not exists:
-                    await session.run_sync(Base.metadata.create_all,
-                                           tables=[table])
+        async with self.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
 
     async def insert_expense(self, category_name: str,
                              account_name: str, amount: Decimal) -> None:
@@ -104,14 +79,19 @@ class AsyncPostgresDB:
         :param amount: The amount of the transaction.
         :type amount: Decimal
         """
-        async with self.get_session() as session:
-            category = session.query(Category)\
-                              .filter_by(name=category_name).first()
-            account = session.query(Account)\
-                             .filter_by(name=account_name).first()
+        async with AsyncSessionWithEnter(self.engine) as session:
+            category_obj = await session.execute(select(Category).where(
+                Category.name == category_name
+            ))
+            category = category_obj.scalars().first()
+            account_obj = await session.execute(select(Account).where(
+                Account.name == account_name
+            ))
+            account = account_obj.scalars().first()
             expense = Expense(amount=amount, category_id=category.id,
                               account_id=account.id)
             session.add(expense)
+            await session.commit()
 
     async def insert_income(self, account_name: str, amount: Decimal) -> None:
         """
@@ -124,12 +104,14 @@ class AsyncPostgresDB:
         :type amount: Decimal
         :return: None
         """
-        async with self.get_session() as session:
-            account = session.query(Account).filter_by(
-                name=account_name
-            ).first()
+        async with AsyncSessionWithEnter(self.engine) as session:
+            account_obj = await session.execute(select(Account).where(
+                Account.name == account_name
+            ))
+            account = account_obj.scalars().first()
             income = Income(amount=amount, account_id=account.id)
             session.add(income)
+            await session.commit()
 
     async def insert_account(self, account_name: str,
                              account_amount: Decimal) -> None:
@@ -144,9 +126,10 @@ class AsyncPostgresDB:
         :type account_amount: Decimal
         :return: None
         """
-        async with self.get_session() as session:
+        async with AsyncSessionWithEnter(self.engine) as session:
             account = Account(name=account_name, balance=account_amount)
             session.add(account)
+            await session.commit()
 
     async def insert_category(self, category_name: str,
                               monthly_limit: Decimal) -> None:
@@ -160,10 +143,11 @@ class AsyncPostgresDB:
         :type monthly limit: Decimal
         :return: None
         """
-        async with self.get_session() as session:
+        async with AsyncSessionWithEnter(self.engine) as session:
             category = Category(name=category_name,
                                 monthly_limit=monthly_limit)
             session.add(category)
+            await session.commit()
 
     async def get_monthly_limit(self, category_name: str) -> Decimal:
         """
@@ -175,9 +159,11 @@ class AsyncPostgresDB:
         :type category_name: str
         :return: The monthly limit for the category.
         """
-        async with self.get_session() as session:
-            category = session.query(Category)\
-                       .filter_by(name=category_name).first()
+        async with AsyncSessionWithEnter(self.engine) as session:
+            category_obj = await session.execute(select(Category).where(
+                Category.name == category_name
+            ))
+            category = category_obj.scalars().first()
             monthly_limit = category.monthly_limit
 
             return monthly_limit
@@ -189,13 +175,16 @@ class AsyncPostgresDB:
 
         :param account_id: The ID of the account to retrieve the amount for.
         :type account_id: int
-        :return: The amount associated with the account.
+        :return: The balance associated with the account.
         """
-        async with self.get_session() as session:
-            account = session.query(Account).filter_by(id=account_id).first()
-            amount = account.amount
+        async with AsyncSessionWithEnter(self.engine) as session:
+            account_obj = await session.execute(select(Account).where(
+                Account.id == account_id
+            ))
+            account = account_obj.scalars().first()
+            balance = account.balance
 
-            return amount
+            return balance
 
     async def get_all_accounts(self) -> str:
         """
@@ -204,11 +193,12 @@ class AsyncPostgresDB:
         :return: A string containing the names of all active accounts,
                  separated by semicolons.
         """
-        async with self.get_session() as session:
-            accounts = session.query(Account.name)\
-                              .filter_by(account_status="active").all()
+        async with AsyncSessionWithEnter(self.engine) as session:
+            accounts = await session.execute(select(Account.name).where(
+                Account.account_status == "active"
+            ))
 
-            return ";".join([account for account in accounts])
+            return ";".join([account[0] for account in accounts])
 
     async def get_all_categories(self) -> str:
         """
@@ -217,11 +207,12 @@ class AsyncPostgresDB:
         :return: A string containing the names of all categories,
                  separated by semicolons.
         """
-        async with self.get_session() as session:
-            categories = session.query(Category.name)\
-                                .filter_by(category_status="active").all()
+        async with AsyncSessionWithEnter(self.engine) as session:
+            categories = await session.execute(select(Category.name).where(
+                Category.category_status == "active"
+            ))
 
-            return ";".join([category for category in categories])
+            return ";".join([category[0] for category in categories])
 
     async def update_monthly_limit(self, category_name: str,
                                    new_limit: Decimal) -> None:
@@ -235,10 +226,13 @@ class AsyncPostgresDB:
         :type new_limit: Decimal
         :return: None
         """
-        async with self.get_session() as session:
-            session.query(Category).filter_by(name=category_name).update(
-                {"monthly_limit": new_limit}
-            )
+        async with AsyncSessionWithEnter(self.engine) as session:
+            category_obj = await session.execute(select(Category).where(
+                Category.name == category_name
+            ))
+            category = category_obj.scalars().first()
+            category.monthly_limit = new_limit
+            await session.commit()
 
     async def update_amount(self, account_from: str,
                             amount_old_currency: Decimal,
@@ -259,14 +253,19 @@ class AsyncPostgresDB:
         :type account_to: str
         :return: None
         """
-        async with self.get_session() as session:
-            account_first = session.query(Account)\
-                                   .filter_by(name=account_from).first()
-            account_first.amount = account_first.amount - amount_old_currency
+        async with AsyncSessionWithEnter(self.engine) as session:
+            account_obj_from = await session.execute(select(Account).where(
+                Account.name == account_from
+            ))
+            account_from = account_obj_from.scalars().first()
+            account_from.balance = account_from.balance - amount_old_currency
 
-            account_second = session.query(Account)\
-                                    .filter_by(name=account_to).first()
-            account_second.amount = account_second.amount + currency_amount
+            account_obj_to = await session.execute(select(Account).where(
+                Account.name == account_to
+            ))
+            account_to = account_obj_to.scalars().first()
+            account_to.balance = account_to.balance + currency_amount
+            await session.commit()
 
     async def archive_account(self, account_name: str) -> None:
         """
@@ -277,10 +276,13 @@ class AsyncPostgresDB:
         :type account_name: str
         :return: None
         """
-        async with self.get_session() as session:
-            session.query(Account).filter_by(name=account_name).update(
-                {"account_status": "archive"}
-            )
+        async with AsyncSessionWithEnter(self.engine) as session:
+            account_obj = await session.execute(select(Account).where(
+                Account.name == account_name
+            ))
+            account = account_obj.scalars().first()
+            account.account_status = "archive"
+            await session.commit()
 
     async def archive_category(self, category_name: str) -> None:
         """
@@ -291,10 +293,13 @@ class AsyncPostgresDB:
         :type category_name: str
         :return: None
         """
-        async with self.get_session() as session:
-            session.query(Category).filter_by(name=category_name).update(
-                {"category_status": "archive"}
-            )
+        async with AsyncSessionWithEnter(self.engine) as session:
+            category_obj = await session.execute(select(Category).where(
+                Category.name == category_name
+            ))
+            category = category_obj.scalars().first()
+            category.category_status = "archive"
+            await session.commit()
 
     async def get_monthly_expenses(self) -> List[Tuple]:
         """
@@ -305,26 +310,28 @@ class AsyncPostgresDB:
                  monthli limit, total expenses for the month,
                  and the current month.
         """
-        async with self.get_session() as session:
-            rows = session.query(
+        async with AsyncSessionWithEnter(self.engine) as session:
+            query = select(
                 Category.name,
                 Category.monthly_limit.label("limit_expenses"),
                 func.sum(Expense.amount).label("total"),
                 extract('month', Expense.date).label("month")
-            ).filter(
+            ).where(
                 Category.id == Expense.category_id,
                 extract('year', Expense.date) == extract('year', func.now()),
                 extract('month', Expense.date) == extract('month', func.now())
-            ).group_by(Category.name, Category.monthly_limit)
+            ).group_by(Category.name, Category.monthly_limit, extract('month', Expense.date))
 
-        result = []
-        for row in rows:
-            dict_row = {}
-            for index, column in enumerate(["category_name", "limit_expenses",
-                                           "total", "month"]):
-                dict_row[column] = row[index]
-            result.append(dict_row)
-        return result
+            rows = await session.execute(query)
+            result = []
+            for row in rows:
+                dict_row = {}
+                for index, column in enumerate(["category_name",
+                                                "limit_expenses",
+                                                "total", "month"]):
+                    dict_row[column] = row[index]
+                result.append(dict_row)
+            return result
 
 
 database = AsyncPostgresDB()

@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
+from decimal import Decimal, InvalidOperation
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.database.db import database
@@ -30,8 +31,8 @@ async def message_input_new_category(message: types.Message,
                               last_message_id=message.message_id, count=2)
 
     try:
-        limit = float(message.text.replace(",", "."))
-    except ValueError:
+        limit = Decimal(message.text.replace(",", "."))
+    except (ValueError, InvalidOperation):
         async with state.proxy() as data:
             data["previous_question"] = (
                 f"Current limit: {data['category_name']}\n"

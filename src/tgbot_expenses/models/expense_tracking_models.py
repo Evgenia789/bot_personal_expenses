@@ -1,6 +1,7 @@
 from sqlalchemy import DECIMAL, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 Base = declarative_base()
 
@@ -78,7 +79,7 @@ class Expense(Base):
     amount = Column(DECIMAL, nullable=False)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
-    date = Column(DateTime, nullable=False)
+    date = Column(DateTime(timezone=True), server_default=func.now())
 
     category = relationship("Category", back_populates="expenses")
     account = relationship("Account", back_populates="expenses")
@@ -104,6 +105,6 @@ class Income(Base):
     id = Column(Integer, primary_key=True, index=True,  autoincrement=True)
     amount = Column(DECIMAL, nullable=False)
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
-    date = Column(DateTime, nullable=False)
+    date = Column(DateTime(timezone=True), server_default=func.now())
 
     account = relationship("Account", back_populates="incomes")

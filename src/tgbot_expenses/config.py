@@ -52,7 +52,6 @@ class PostgresDB:
         db_url (str): The URL for connecting to the PostgreSQL database.
     """
     db_host: str
-    db_name: str
     db_port: str
     postgres_user: str
     postgres_password: str
@@ -61,9 +60,7 @@ class PostgresDB:
 
     def __post_init__(self):
         if self.db_url is None:
-            self.db_url = (f"postgresql://{self.postgres_user}:"
-                           f"{self.postgres_password}@{self.db_host}:"
-                           f"{self.db_port}/{self.db_name}")
+            self.db_url = (f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.db_host}:{self.db_port}/{self.postgres_db}")
 
 
 @dataclass
@@ -111,7 +108,6 @@ def load_config(path: str) -> Config:
         ),
         postgres_db=PostgresDB(
             db_host=postgres_db.get("DB_HOST"),
-            db_name=postgres_db.get("DB_NAME"),
             db_port=postgres_db.get("DB_PORT"),
             postgres_user=postgres_db.get("POSTGRES_USER"),
             postgres_password=postgres_db.get("POSTGRES_PASSWORD"),

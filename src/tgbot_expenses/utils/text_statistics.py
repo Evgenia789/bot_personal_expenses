@@ -8,7 +8,7 @@ async def get_data(data: List[Tuple]) -> str:
 
     :param data: A list of tuples containing the category name,
                  the total expense and the expense limit.
-    :type data: List[Tuple[str, float, float]]
+    :type data: List[Tuple[str, Decimal, Decimal]]
     :return: str
     """
     text_msg = "\n"

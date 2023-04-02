@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
+from decimal import Decimal, InvalidOperation
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
@@ -29,8 +30,8 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
                               last_message_id=message.message_id, count=2)
 
     try:
-        amount = float(message.text.replace(",", "."))
-    except ValueError:
+        amount = Decimal(message.text.replace(",", "."))
+    except (ValueError, InvalidOperation):
         async with state.proxy() as data:
             data["previous_question"] = QuestionText.amount
             data["state"] = await state.get_state()

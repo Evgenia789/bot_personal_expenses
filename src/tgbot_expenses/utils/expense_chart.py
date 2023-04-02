@@ -10,7 +10,7 @@ async def get_chart(data: List[Tuple]) -> str:
 
     :param data: A list of tuples containing monthly expense data.
                  Each tuple should have the following format:
-                 (category_name: str, total: float).
+                 (category_name: str, total: Decimal).
     :type data: List[Tuple]
     :return: str
     """

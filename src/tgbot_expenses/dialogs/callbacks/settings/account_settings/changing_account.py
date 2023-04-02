@@ -3,7 +3,7 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from tgbot_expenses.helpers.keyboards.changing_account import \
+from src.tgbot_expenses.helpers.keyboards.changing_account import \
     get_keyboard_changing_account
 from src.tgbot_expenses.states.chat_states import StateSettings
 

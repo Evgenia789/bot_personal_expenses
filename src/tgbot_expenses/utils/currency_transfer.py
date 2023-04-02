@@ -1,15 +1,16 @@
 import aiohttp
 from bs4 import BeautifulSoup
+from decimal import Decimal
 
 
-async def get_currency_rate(currencies: str) -> float:
+async def get_currency_rate(currencies: str) -> Decimal:
     """
     Get the exchange rate for a currency pair.
 
     :param currencies: A string representing the currency pair, in the format
                        "CURRENCY1 to CURRENCY2".
     :type currencies: str
-    :return: float
+    :return: Decimal
     :raises ValueError: If the specified currency pair is invalid or not found
                         on the website.
     """
@@ -26,4 +27,4 @@ async def get_currency_rate(currencies: str) -> float:
             if rate is None:
                 raise ValueError(f"Exchange rate not found for currency pair {currencies}")
             rate = rate.text
-            return float(rate.replace(",", "."))
+            return Decimal(rate.replace(",", "."))
