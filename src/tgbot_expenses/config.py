@@ -2,7 +2,7 @@
 This module defines the load_config function to read and load a configuration
 file in ini format into a Config object.
 The Config object is defined as a dataclass containing TgBot, AllowedIds, and
-GoogleTables objects, also defined as dataclasses.
+PostgresDB objects, also defined as dataclasses.
 
 This module requires the configparser and dataclasses modules to be imported.
 
@@ -38,22 +38,30 @@ class AllowedIds:
 
 
 @dataclass
-class GoogleTables:
+class PostgresDB:
     """
-    Google Sheets tables configuration.
+    Represents a PostgreSQL database configuration.
 
     Attributes:
-        spreadsheet (str): Name of the spreadsheet.
-        expenses (str): Name of the expenses table.
-        incomes (str): Name of the incomes table.
-        currency (str): Name of the currency table.
-        total_amount (str): Name of the total amount table.
+        postgres_host (str): The hostname of the PostgreSQL server.
+        postgres_port (int): The port number of the PostgreSQL server.
+        postgres_user (str): The username for accessing the database.
+        postgres_password (str): The password for accessing the database.
+        postgres_db (str): The name of the PostgreSQL database to use.
+        db_url (str): The URL for connecting to the PostgreSQL database.
     """
-    spreadsheet: str
-    expenses: str
-    incomes: str
-    currency: str
-    total_amount: str
+    postgres_host: str
+    postgres_port: str
+    postgres_user: str
+    postgres_password: str
+    postgres_db: str
+    db_url: str = None
+
+    def __post_init__(self):
+        if self.db_url is None:
+            self.db_url = (f"postgresql+asyncpg://{self.postgres_user}:"
+                           f"{self.postgres_password}@{self.postgres_host}:"
+                           f"{self.postgres_port}/{self.postgres_db}")
 
 
 @dataclass
@@ -64,11 +72,11 @@ class Config:
     Attributes:
         tg_bot (TgBot): Telegram Bot token configuration.
         ids (AllowedIds): Allowed user IDs configuration.
-        googletables (GoogleTables): Google Sheets tables configuration.
+        postgres_db (PostgresDB): PostgreSQL database configuration.
     """
     tg_bot: TgBot
     ids: AllowedIds
-    googletables: GoogleTables
+    postgres_db: PostgresDB
 
 
 def load_config(path: str) -> Config:
@@ -89,7 +97,7 @@ def load_config(path: str) -> Config:
 
     tg_bot = config["tg_bot"]
     ids = config["allowed_ids"]
-    googletables = config["google_tables"]
+    postgres_db = config["postgres_database"]
 
     return Config(
         tg_bot=TgBot(
@@ -99,11 +107,12 @@ def load_config(path: str) -> Config:
             id_1=ids.getint("ID_1"),
             id_2=ids.getint("ID_2")
         ),
-        googletables=GoogleTables(
-            spreadsheet=googletables.get("spreadsheet"),
-            expenses=googletables.get("expenses"),
-            incomes=googletables.get("incomes"),
-            currency=googletables.get("currency"),
-            total_amount=googletables.get("total_amount")
+        postgres_db=PostgresDB(
+            postgres_host=postgres_db.get("POSTGRES_HOST"),
+            postgres_port=postgres_db.get("POSTGRES_PORT"),
+            postgres_user=postgres_db.get("POSTGRES_USER"),
+            postgres_password=postgres_db.get("POSTGRES_PASSWORD"),
+            postgres_db=postgres_db.get("POSTGRES_DB"),
+            db_url=PostgresDB.db_url
         )
     )

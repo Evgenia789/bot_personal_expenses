@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
@@ -11,11 +13,11 @@ from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
                                                    StateInvalid)
 
 
-@Bot.message_handler(state=StateCurrencyExchange.FromBillAmount,
+@Bot.message_handler(state=StateCurrencyExchange.FromAccountAmount,
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
-    Processes the user's message about the amount entered for the bill
+    Processes the user's message about the amount entered for the account
     from which the money is being converted.
 
     :param message: The Message object containing the user's input message.
@@ -29,8 +31,8 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
                               last_message_id=message.message_id, count=2)
 
     try:
-        amount = float(message.text.replace(",", "."))
-    except ValueError:
+        amount = Decimal(message.text.replace(",", "."))
+    except (ValueError, InvalidOperation):
         async with state.proxy() as data:
             data["previous_question"] = QuestionText.amount
             data["state"] = state.get_state()
@@ -43,11 +45,12 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
 
         await StateCurrencyExchange.next()
 
+        accounts = await database.get_all_accounts()
         await Bot.answer(
             message=message,
-            text=QuestionText.to_bill,
+            text=QuestionText.to_account,
             reply_markup=get_keyboard_question(
-                button_names=database.get_all_bills(),
+                button_names=accounts,
                 button_back=True
             )
         )

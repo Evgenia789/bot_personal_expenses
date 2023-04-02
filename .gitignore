@@ -134,3 +134,4 @@ service_account.json
 
 src/tgbot_expenses/utils/chart/output.png
 .vscode/
+.archive

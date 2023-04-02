@@ -4,8 +4,10 @@ from aiogram.dispatcher import FSMContext
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.database.db import database
+from src.tgbot_expenses.dialogs.messages.expenses.empty_data import \
+    message_empty_data
 from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
-from src.tgbot_expenses.states.chat_states import StateChat
+from src.tgbot_expenses.states.chat_states import StateChat, StateEmpty
 
 
 @Bot.callback_query_handler(state=StateChat.Category)
@@ -24,6 +26,12 @@ async def callbacks_get_category(query: types.CallbackQuery,
     """
     await query.message.delete()
 
+    accounts = await database.get_all_accounts()
+
+    if not accounts:
+        await StateEmpty.InvalidEmpty.set()
+        await message_empty_data(message=query.message, state=state)
+
     async with state.proxy() as data:
         data["category"] = query.data
 
@@ -31,8 +39,8 @@ async def callbacks_get_category(query: types.CallbackQuery,
 
     await Bot.answer(
         message=query.message,
-        text=QuestionText.bill,
+        text=QuestionText.account,
         reply_markup=get_keyboard_question(
-            button_names=database.get_all_bills()
+            button_names=accounts
         )
     )

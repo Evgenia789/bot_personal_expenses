@@ -8,7 +8,7 @@ class StateChat(StatesGroup):
     MainMenu = State()
     ShowStatistic = State()
     Category = State()
-    Bill = State()
+    Account = State()
     Amount = State()
     DataConfirmation = State()
 
@@ -20,10 +20,10 @@ class StateSettings(StatesGroup):
     MainMenu = State()
     ChangeLimit = State()
     NewLimit = State()
-    ChangeBill = State()
-    AddBill = State()
-    AmountBill = State()
-    DeleteBill = State()
+    ChangeAccount = State()
+    AddAccount = State()
+    AmountAccount = State()
+    DeleteAccount = State()
     ChangeCategory = State()
     AddCategory = State()
     CategoryLimit = State()
@@ -34,10 +34,10 @@ class StateCurrencyExchange(StatesGroup):
     """
     Represents the state of a chat currency exchange rate.
     """
-    FromBill = State()
-    FromBillAmount = State()
-    ToBill = State()
-    ToBillAmount = State()
+    FromAccount = State()
+    FromAccountAmount = State()
+    ToAccount = State()
+    ToAccountAmount = State()
     DataConfirmation = State()
 
 
@@ -46,3 +46,10 @@ class StateInvalid(StatesGroup):
     Represents the invalid state.
     """
     InvalidAmount = State()
+
+
+class StateEmpty(StatesGroup):
+    """
+    Represents the invalid state.
+    """
+    InvalidEmpty = State()

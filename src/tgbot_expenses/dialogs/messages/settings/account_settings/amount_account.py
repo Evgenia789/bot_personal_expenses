@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
@@ -11,11 +13,11 @@ from src.tgbot_expenses.dialogs.messages.settings.beginning import \
 from src.tgbot_expenses.states.chat_states import StateInvalid, StateSettings
 
 
-@Bot.message_handler(state=StateSettings.AmountBill,
+@Bot.message_handler(state=StateSettings.AmountAccount,
                      content_types=types.ContentType.ANY)
 async def message_amount(message: types.Message, state: FSMContext) -> None:
     """
-    Processes the user's message about the amount entered for the bill.
+    Processes the user's message about the amount entered for the account.
 
     :param message: The Message object containing the user's input message.
     :type message: types.Message
@@ -28,8 +30,8 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
                               last_message_id=message.message_id, count=2)
 
     try:
-        amount = float(message.text.replace(",", "."))
-    except ValueError:
+        amount = Decimal(message.text.replace(",", "."))
+    except (ValueError, InvalidOperation):
         async with state.proxy() as data:
             data["previous_question"] = QuestionText.amount
             data["state"] = await state.get_state()

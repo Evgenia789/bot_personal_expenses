@@ -23,10 +23,9 @@ Bot.dispatch.middleware.setup(AuthorizationMiddleware())
 Bot.dispatch.middleware.setup(LoggingMiddleware())
 
 
-def main():
+async def main():
     """
-    Initializes the logging configuration, loads the "dialogs" module,
-    and starts the bot by polling for updates.
+    Initializes the logging configuration and loads the "dialogs" module.
     """
     logging.basicConfig(
         level=logging.INFO,
@@ -36,15 +35,15 @@ def main():
         filemode='w'
     )
     logger.error("Starting bot")
-    # loop = asyncio.get_running_loop()
-    # await loop.run_in_executor(None, load_module, "dialogs", os.path.abspath("src"))
-    load_module("dialogs", cur_dir=os.path.abspath("src"))  # move
 
-    executor.start_polling(bot, skip_updates=False)
+    await load_module("dialogs", os.path.abspath("src"))
 
 
 if __name__ == '__main__':
     try:
-        asyncio.run(main())
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.create_task(main())
+        executor.start_polling(bot, skip_updates=False, loop=loop)
     except (KeyboardInterrupt, SystemExit):
         logger.error("Bot stopped!")

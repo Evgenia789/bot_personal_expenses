@@ -25,7 +25,7 @@ async def callbacks_get_category_to_change_limit(query: types.CallbackQuery,
 
     await StateSettings.NewLimit.set()
 
-    limit_category = database.get_category_limit(
+    limit_category = await database.get_monthly_limit(
         category_name=query.data
     )
 

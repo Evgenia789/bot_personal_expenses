@@ -31,10 +31,10 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
 
     async with state.proxy() as data:
         await database.update_amount(
-            bill_from=data["bill_from"],
+            account_from=data["account_from"],
             amount_old_currency=data["amount_old_currency"],
             currency_amount=data["currency_amount"],
-            bill_to=data["bill_to"]
+            account_to=data["account_to"]
         )
 
     last_message = await Bot.answer(message=query.message,
