@@ -11,20 +11,32 @@ from src.tgbot_expenses.models.expense_tracking_models import (Account, Base,
 
 
 class AsyncSessionWithEnter(AsyncSession):
+    """
+    Subclass of AsyncSession that provides support for the 'async with' syntax.
+
+    Example usage:
+
+    async with AsyncSessionWithEnter() as session:
+        # interact with session object here
+
+    """
     async def __aenter__(self):
+        """
+        Returns the session object when used in an 'async with' block.
+        """
         return self
 
     async def __aexit__(self, exc_type, exc_val, traceback):
+        """
+        Rolls back any uncommitted changes when the 'async with' block
+        is exited.
+        """
         await super().__aexit__(exc_type, exc_val, traceback)
 
 
 class AsyncPostgresDB:
     """
     An asynchronous database client for PostgreSQL.
-
-    Attributes:
-        engine (AsyncEngine): The asynchronous SQLAlchemy engine
-                              object for the database.
     """
     _instance = None
     engine = None
@@ -32,8 +44,9 @@ class AsyncPostgresDB:
 
     def __new__(cls, *args, **kwargs):
         """
-        Create a singleton instance of the Database class.
-        :return: A singleton instance of the Database class.
+        Create a singleton instance of the AsyncPostgresDB class.
+
+        :return: A singleton instance of the AsyncPostgresDB class.
         """
         if cls._instance is None:
             cls._instance = super(AsyncPostgresDB, cls).__new__(
@@ -50,20 +63,23 @@ class AsyncPostgresDB:
                 echo=True
             )
 
-    async def __call__(self, *args, **kwargs):
+    async def __call__(self, *args, **kwargs) -> 'AsyncPostgresDB':
         """
         Returns the singleton instance of the AsyncPostgresDB class.
         """
         self.__init__(*args, **kwargs)
         return self.engine
 
-    async def create_tables(self):
+    async def create_tables(self) -> None:
         """
         Creates the Category, Income, Expense, and Account tables
         if they do not exist.
+
+        :return: None
         """
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+        return
 
     async def insert_expense(self, category_name: str,
                              account_name: str, amount: Decimal) -> None:
@@ -77,6 +93,7 @@ class AsyncPostgresDB:
         :type account_name: str
         :param amount: The amount of the transaction.
         :type amount: Decimal
+        :return: None
         """
         async with AsyncSessionWithEnter(self.engine) as session:
             category_obj = await session.execute(select(Category).where(
@@ -91,6 +108,7 @@ class AsyncPostgresDB:
                               account_id=account.id)
             session.add(expense)
             await session.commit()
+        return
 
     async def insert_income(self, account_name: str, amount: Decimal) -> None:
         """
@@ -111,6 +129,7 @@ class AsyncPostgresDB:
             income = Income(amount=amount, account_id=account.id)
             session.add(income)
             await session.commit()
+        return
 
     async def insert_account(self, account_name: str,
                              account_amount: Decimal) -> None:
@@ -129,6 +148,7 @@ class AsyncPostgresDB:
             account = Account(name=account_name, balance=account_amount)
             session.add(account)
             await session.commit()
+        return
 
     async def insert_category(self, category_name: str,
                               monthly_limit: Decimal) -> None:
@@ -147,6 +167,7 @@ class AsyncPostgresDB:
                                 monthly_limit=monthly_limit)
             session.add(category)
             await session.commit()
+        return
 
     async def get_monthly_limit(self, category_name: str) -> Decimal:
         """
@@ -232,6 +253,7 @@ class AsyncPostgresDB:
             category = category_obj.scalars().first()
             category.monthly_limit = new_limit
             await session.commit()
+        return
 
     async def update_amount(self, account_from: str,
                             amount_old_currency: Decimal,
@@ -265,6 +287,7 @@ class AsyncPostgresDB:
             account_to = account_obj_to.scalars().first()
             account_to.balance = account_to.balance + currency_amount
             await session.commit()
+        return
 
     async def archive_account(self, account_name: str) -> None:
         """
@@ -282,6 +305,7 @@ class AsyncPostgresDB:
             account = account_obj.scalars().first()
             account.account_status = "archive"
             await session.commit()
+        return
 
     async def archive_category(self, category_name: str) -> None:
         """
@@ -299,6 +323,7 @@ class AsyncPostgresDB:
             category = category_obj.scalars().first()
             category.category_status = "archive"
             await session.commit()
+        return
 
     async def get_monthly_expenses(self) -> List[Tuple]:
         """
