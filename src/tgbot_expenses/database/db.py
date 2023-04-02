@@ -128,6 +128,7 @@ class AsyncPostgresDB:
             account = account_obj.scalars().first()
             income = Income(amount=amount, account_id=account.id)
             session.add(income)
+            account.balance = account.balance + amount
             await session.commit()
         return
 

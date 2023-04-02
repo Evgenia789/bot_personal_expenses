@@ -46,3 +46,10 @@ class StateInvalid(StatesGroup):
     Represents the invalid state.
     """
     InvalidAmount = State()
+
+
+class StateEmpty(StatesGroup):
+    """
+    Represents the invalid state.
+    """
+    InvalidEmpty = State()
