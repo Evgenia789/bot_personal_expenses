@@ -319,7 +319,9 @@ class AsyncPostgresDB:
                 Category.id == Expense.category_id,
                 extract('year', Expense.date) == extract('year', func.now()),
                 extract('month', Expense.date) == extract('month', func.now())
-            ).group_by(Category.name, Category.monthly_limit, extract('month', Expense.date))
+            ).group_by(Category.name,
+                       Category.monthly_limit,
+                       extract('month', Expense.date))
 
             rows = await session.execute(query)
             result = []
