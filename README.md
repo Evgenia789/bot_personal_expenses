@@ -5,17 +5,14 @@
     <img src="https://github.com/Evgenia789/bot_personal_expenses/blob/main/public/settings_category.gif" alt="animated" />
 </p>
 
-Bot Personal Expenses is a Telegram bot that helps to keep track of personal expenses. It allows you to view your spending statistics for a month, taking into account the limits you set for certain categories. You can also change the limits for categories, set or delete accounts to which your expenses will be linked, create or delete a category, view current exchange rates and convert funds from one account to another.   
-
-All expenses are recorded in a database in dollars, taking into account the current exchange rate, and expenses are also recorded in a Google Spreadsheet (added before the main application was created).
+Bot Personal Expenses is a Telegram bot that helps to keep track of personal expenses. It allows you to view your spending statistics for a month, taking into account the limits you set for certain categories. You can also change the limits for categories, set or delete accounts to which your expenses will be linked, create or delete a category, view current exchange rates and convert funds from one account to another.
 
 ## Technologies used
 
 * Python 3.10
 * Aiogram library for creating the Telegram bot
-* SQLite database
+* PostgreSQL database
 * Requests and BeautifulSoup modules for web scraping to get the current exchange rate of currencies
-* Google Sheets API for recording expenses
 
 ## How to run the project
 
@@ -43,12 +40,12 @@ TELEGRAM_TOKEN=""
 ID_1=""
 ID_2=""
 
-[google_tables]
-spreadsheet=""
-expenses_table=""
-incomes_table=""
-currency_table=your_table_name
-total_amount_table=your_table_name
+[postgres_database]
+POSTGRES_HOST=""
+POSTGRES_PORT=""
+POSTGRES_USER=""
+POSTGRES_PASSWORD=""
+POSTGRES_DB=""
 
 ```
 
@@ -56,9 +53,8 @@ where:
 
 * `TELEGRAM_TOKEN` is the token obtained from BotFather
 * `ID_1`, `ID_2`, etc. are the IDs of the users who are allowed to use the bot
-* `expenses_table`, `incomes_table`, `currency_table`, `total_amount_table` are the names of the Google Sheets you will use for recording expenses (if you want to use this feature).
-
-For using Google Sheets API, you need to follow the instructions on this page: [https://github.com/burnash/gspread/blob/master/docs/oauth2.rst](https://github.com/burnash/gspread/blob/master/docs/oauth2.rst)
+* `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`,
+  `POSTGRES_PASSWORD,` `POSTGRES_DB` are variables to connect to the PostgreSQL database.
 
 ## Author
 
