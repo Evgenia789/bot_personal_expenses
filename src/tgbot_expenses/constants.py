@@ -26,3 +26,6 @@ class QuestionText:
     start = "You are in the process of entering expenses"
     from_account = "Select the account you want to transfer money from"
     to_account = "Select the account to which you want to transfer money"
+    empty_data = ("The required categories or accounts have not been created."
+                  "\nYou need to add them via `Settings`-> `Change account`/"
+                  "`Change Category`/ -> `Add Account`/`Add Category`.")
