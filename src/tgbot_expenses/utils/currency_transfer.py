@@ -1,6 +1,7 @@
+from decimal import Decimal
+
 import aiohttp
 from bs4 import BeautifulSoup
-from decimal import Decimal
 
 
 async def get_currency_rate(currencies: str) -> Decimal:

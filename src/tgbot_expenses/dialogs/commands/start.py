@@ -3,10 +3,10 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
+from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.helpers.keyboards.main_menu import \
     get_keyboard_main_menu
 from src.tgbot_expenses.states.chat_states import StateChat
-from src.tgbot_expenses.database.db import database
 
 
 @Bot.message_handler(commands=["start"], state="*")

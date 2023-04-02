@@ -1,5 +1,6 @@
-from src.tgbot_expenses.utils.currency_transfer import get_currency_rate
 from decimal import Decimal
+
+from src.tgbot_expenses.utils.currency_transfer import get_currency_rate
 
 
 async def get_dollar_amount(account: str, amount: Decimal) -> Decimal:

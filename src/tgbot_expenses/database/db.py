@@ -1,9 +1,8 @@
 from decimal import Decimal
 from typing import List, Tuple
 
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.sql import extract, func, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.tgbot_expenses.config import load_config
 from src.tgbot_expenses.models.expense_tracking_models import (Account, Base,

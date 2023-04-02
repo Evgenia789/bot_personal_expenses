@@ -60,7 +60,9 @@ class PostgresDB:
 
     def __post_init__(self):
         if self.db_url is None:
-            self.db_url = (f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.db_host}:{self.db_port}/{self.postgres_db}")
+            self.db_url = (f"postgresql+asyncpg://{self.postgres_user}:"
+                           f"{self.postgres_password}@{self.db_host}:"
+                           f"{self.db_port}/{self.postgres_db}")
 
 
 @dataclass

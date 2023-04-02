@@ -1,6 +1,7 @@
+from decimal import Decimal, InvalidOperation
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from decimal import Decimal, InvalidOperation
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText

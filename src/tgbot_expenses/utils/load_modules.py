@@ -1,5 +1,5 @@
-import os
 import asyncio
+import os
 
 
 async def load_module(name: str, cur_dir: str) -> None:
@@ -19,11 +19,13 @@ async def load_module(name: str, cur_dir: str) -> None:
                          the code.
     """
     new_path = f"{cur_dir}\\tgbot_expenses\\{name}"
-    # new_path = os.path.abspath("src")
+
     for root, dirs, files in os.walk(new_path):
         for file in files:
             if file.endswith('.py') and not file.startswith('_'):
                 path_root = ".".join(root.split('\\')[3:])
                 await asyncio.to_thread(
-                    __import__, path_root + "." + file.split(".")[0], fromlist=()
+                    __import__,
+                    path_root + "." + file.split(".")[0],
+                    fromlist=()
                 )
