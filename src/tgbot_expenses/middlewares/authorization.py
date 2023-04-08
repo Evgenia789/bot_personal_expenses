@@ -5,7 +5,7 @@ from aiogram.dispatcher.handler import CancelHandler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
 from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.config import load_config
+from src.tgbot_expenses.config import Config
 
 
 class AuthorizationMiddleware(BaseMiddleware):
@@ -27,7 +27,7 @@ class AuthorizationMiddleware(BaseMiddleware):
         :return: None
         :raises CancelHandler: If the message sender is not an authorized user.
         """
-        config = load_config("bot.ini")
+        config = Config.load_config("bot.ini")
 
         if str(message.from_user.id) not in [config.ids.id_1, config.ids.id_2]:
 

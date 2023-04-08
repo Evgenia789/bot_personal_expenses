@@ -80,29 +80,30 @@ class Config:
     ids: AllowedIds
     postgres_db: PostgresDBConfig
 
+    @classmethod
+    def load_config(cls, path: str) -> 'Config':
+        """
+        Load the configuration file in ini format located at the given path.
 
-def load_config(path: str) -> Config:
-    """
-    Load the configuration file in ini format located at the given path.
+        :param path: The path to the configuration file.
+        :type path: str
 
-    :param path: The path to the configuration file.
-    :type path: str
+        :return: A `Config` object containing all the configuration data.
 
-    :return: A `Config` object containing all the configuration data.
+        :raises MissingSectionHeaderError: If the configuration file is missing
+                                           a section header.
+        :raises ParsingError: If there is an error parsing
+                              the configuration file.
+        """
+        config = configparser.ConfigParser()
+        config.read(path, encoding="utf-8")
 
-    :raises MissingSectionHeaderError: If the configuration file is missing
-                                       a section header.
-    :raises ParsingError: If there is an error parsing the configuration file.
-    """
-    config = configparser.ConfigParser()
-    config.read(path, encoding="utf-8")
+        tg_bot = config["tg_bot"]
+        ids = config["allowed_ids"]
+        postgres_db = config["postgres_database"]
 
-    tg_bot = config["tg_bot"]
-    ids = config["allowed_ids"]
-    postgres_db = config["postgres_database"]
-
-    return Config(
-        tg_bot=TgBot(token=tg_bot.get("TELEGRAM_TOKEN")),
-        ids=AllowedIds(**ids),
-        postgres_db=PostgresDBConfig(**postgres_db)
-    )
+        return cls(
+            tg_bot=TgBot(token=tg_bot.get("TELEGRAM_TOKEN")),
+            ids=AllowedIds(**ids),
+            postgres_db=PostgresDBConfig(**postgres_db)
+        )

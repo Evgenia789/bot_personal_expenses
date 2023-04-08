@@ -6,14 +6,14 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.utils import executor
 
 from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.config import load_config
+from src.tgbot_expenses.config import Config
 from src.tgbot_expenses.middlewares import (AuthorizationMiddleware,
                                             StartOrContinueMiddleware,
                                             UnknownMiddleware)
 from src.tgbot_expenses.utils.load_modules import load_module
 
 logger = logging.getLogger(__name__)
-config = load_config("bot.ini")
+config = Config.load_config("bot.ini")
 
 
 bot = Bot(config.tg_bot.token)

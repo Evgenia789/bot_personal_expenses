@@ -4,7 +4,7 @@ from typing import List, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.sql import extract, func, select
 
-from src.tgbot_expenses.config import load_config
+from src.tgbot_expenses.config import Config
 from src.tgbot_expenses.models.expense_tracking_models import (Account, Base,
                                                                Category,
                                                                Expense, Income)
@@ -40,7 +40,7 @@ class AsyncPostgresDB:
     """
     _instance = None
     engine = None
-    config = load_config("bot.ini")
+    config = Config.load_config("bot.ini")
 
     def __new__(cls, *args, **kwargs):
         """
