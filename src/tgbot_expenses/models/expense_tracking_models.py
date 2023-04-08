@@ -24,9 +24,10 @@ class Category(Base):
 
     id = sa.Column(sa.Integer, primary_key=True, index=True,
                    autoincrement=True)
-    name = sa.Column(sa.String, nullable=False)
+    name = sa.Column(sa.String(30), nullable=False)
     monthly_limit = sa.Column(sa.DECIMAL, nullable=False)
-    category_status = sa.Column(sa.String, nullable=False, default="active")
+    category_status = sa.Column(sa.String(10), nullable=False,
+                                default="active")
 
     expenses = relationship("Expense", back_populates="category")
 
@@ -49,9 +50,9 @@ class Account(Base):
 
     id = sa.Column(sa.Integer, primary_key=True, index=True,
                    autoincrement=True)
-    name = sa.Column(sa.String, nullable=False)
+    name = sa.Column(sa.String(50), nullable=False)
     balance = sa.Column(sa.DECIMAL, nullable=False)
-    account_status = sa.Column(sa.String, nullable=False, default="active")
+    account_status = sa.Column(sa.String(10), nullable=False, default="active")
 
     expenses = relationship("Expense", back_populates="account")
     incomes = relationship("Income", back_populates="account")
