@@ -1,4 +1,4 @@
-from sqlalchemy import DECIMAL, Column, DateTime, ForeignKey, Integer, String
+import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -22,10 +22,11 @@ class Category(Base):
     """
     __tablename__ = 'categories'
 
-    id = Column(Integer, primary_key=True, index=True,  autoincrement=True)
-    name = Column(String, nullable=False)
-    monthly_limit = Column(DECIMAL, nullable=False)
-    category_status = Column(String, nullable=False, default="active")
+    id = sa.Column(sa.Integer, primary_key=True, index=True,
+                   autoincrement=True)
+    name = sa.Column(sa.String, nullable=False)
+    monthly_limit = sa.Column(sa.DECIMAL, nullable=False)
+    category_status = sa.Column(sa.String, nullable=False, default="active")
 
     expenses = relationship("Expense", back_populates="category")
 
@@ -46,10 +47,11 @@ class Account(Base):
     """
     __tablename__ = 'accounts'
 
-    id = Column(Integer, primary_key=True, index=True,  autoincrement=True)
-    name = Column(String, nullable=False)
-    balance = Column(DECIMAL, nullable=False)
-    account_status = Column(String, nullable=False, default="active")
+    id = sa.Column(sa.Integer, primary_key=True, index=True,
+                   autoincrement=True)
+    name = sa.Column(sa.String, nullable=False)
+    balance = sa.Column(sa.DECIMAL, nullable=False)
+    account_status = sa.Column(sa.String, nullable=False, default="active")
 
     expenses = relationship("Expense", back_populates="account")
     incomes = relationship("Income", back_populates="account")
@@ -75,11 +77,14 @@ class Expense(Base):
     """
     __tablename__ = 'expenses'
 
-    id = Column(Integer, primary_key=True, index=True,  autoincrement=True)
-    amount = Column(DECIMAL, nullable=False)
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
-    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
-    date = Column(DateTime(timezone=True), server_default=func.now())
+    id = sa.Column(sa.Integer, primary_key=True, index=True,
+                   autoincrement=True)
+    amount = sa.Column(sa.DECIMAL, nullable=False)
+    category_id = sa.Column(sa.Integer, sa.ForeignKey("categories.id"),
+                            nullable=False)
+    account_id = sa.Column(sa.Integer, sa.ForeignKey("accounts.id"),
+                           nullable=False)
+    date = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
 
     category = relationship("Category", back_populates="expenses")
     account = relationship("Account", back_populates="expenses")
@@ -102,9 +107,11 @@ class Income(Base):
     """
     __tablename__ = 'incomes'
 
-    id = Column(Integer, primary_key=True, index=True,  autoincrement=True)
-    amount = Column(DECIMAL, nullable=False)
-    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
-    date = Column(DateTime(timezone=True), server_default=func.now())
+    id = sa.Column(sa.Integer, primary_key=True, index=True,
+                   autoincrement=True)
+    amount = sa.Column(sa.DECIMAL, nullable=False)
+    account_id = sa.Column(sa.Integer, sa.ForeignKey("accounts.id"),
+                           nullable=False)
+    date = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
 
     account = relationship("Account", back_populates="incomes")
