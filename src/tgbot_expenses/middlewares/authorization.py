@@ -29,7 +29,7 @@ class AuthorizationMiddleware(BaseMiddleware):
         """
         config = load_config("bot.ini")
 
-        if message.from_user.id not in [config.ids.id_1, config.ids.id_2]:
+        if str(message.from_user.id) not in [config.ids.id_1, config.ids.id_2]:
 
             response = await Bot.answer(
                 message=message,

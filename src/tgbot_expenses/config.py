@@ -102,18 +102,7 @@ def load_config(path: str) -> Config:
     postgres_db = config["postgres_database"]
 
     return Config(
-        tg_bot=TgBot(
-            token=tg_bot.get("TELEGRAM_TOKEN")
-        ),
-        ids=AllowedIds(
-            id_1=ids.getint("ID_1"),
-            id_2=ids.getint("ID_2")
-        ),
-        postgres_db=PostgresDBConfig(
-            postgres_host=postgres_db.get("POSTGRES_HOST"),
-            postgres_port=postgres_db.get("POSTGRES_PORT"),
-            postgres_user=postgres_db.get("POSTGRES_USER"),
-            postgres_password=postgres_db.get("POSTGRES_PASSWORD"),
-            postgres_db=postgres_db.get("POSTGRES_DB")
-        )
+        tg_bot=TgBot(token=tg_bot.get("TELEGRAM_TOKEN")),
+        ids=AllowedIds(**ids),
+        postgres_db=PostgresDBConfig(**postgres_db)
     )
