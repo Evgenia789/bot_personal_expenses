@@ -38,7 +38,7 @@ class AllowedIds:
 
 
 @dataclass
-class PostgresDB:
+class PostgresDBConfig:
     """
     Represents a PostgreSQL database configuration.
 
@@ -78,7 +78,7 @@ class Config:
     """
     tg_bot: TgBot
     ids: AllowedIds
-    postgres_db: PostgresDB
+    postgres_db: PostgresDBConfig
 
 
 def load_config(path: str) -> Config:
@@ -109,7 +109,7 @@ def load_config(path: str) -> Config:
             id_1=ids.getint("ID_1"),
             id_2=ids.getint("ID_2")
         ),
-        postgres_db=PostgresDB(
+        postgres_db=PostgresDBConfig(
             postgres_host=postgres_db.get("POSTGRES_HOST"),
             postgres_port=postgres_db.get("POSTGRES_PORT"),
             postgres_user=postgres_db.get("POSTGRES_USER"),
