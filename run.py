@@ -35,7 +35,6 @@ async def main():
         filemode='w'
     )
     logger.error("Starting bot")
-
     await load_module("dialogs", os.path.abspath("src"))
 
 

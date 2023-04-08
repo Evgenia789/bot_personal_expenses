@@ -1,5 +1,8 @@
 import asyncio
+import logging
 import os
+
+logging.basicConfig(level=logging.INFO)
 
 
 async def load_module(name: str, cur_dir: str) -> None:
@@ -24,8 +27,12 @@ async def load_module(name: str, cur_dir: str) -> None:
         for file in files:
             if file.endswith('.py') and not file.startswith('_'):
                 path_root = ".".join(root.split('\\')[3:])
-                await asyncio.to_thread(
-                    __import__,
-                    path_root + "." + file.split(".")[0],
-                    fromlist=()
-                )
+                module_name = path_root + "." + file.split(".")[0]
+                try:
+                    await asyncio.to_thread(
+                        __import__,
+                        module_name,
+                        fromlist=()
+                    )
+                except Exception as e:
+                    logging.error(f"Error importing {module_name}: {e}")
