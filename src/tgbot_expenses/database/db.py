@@ -58,8 +58,9 @@ class AsyncPostgresDB:
         Initializes a new instance of the AsyncPostgresDB class.
         """
         if self.engine is None:
+            db_config = self.config.postgres_db
             self.engine = create_async_engine(
-                url=self.config.postgres_db.db_url,
+                url=db_config.db_url,
                 echo=True
             )
 

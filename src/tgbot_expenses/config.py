@@ -48,20 +48,22 @@ class PostgresDB:
         postgres_user (str): The username for accessing the database.
         postgres_password (str): The password for accessing the database.
         postgres_db (str): The name of the PostgreSQL database to use.
-        db_url (str): The URL for connecting to the PostgreSQL database.
+        _db_url (str): The URL for connecting to the PostgreSQL database.
     """
     postgres_host: str
     postgres_port: str
     postgres_user: str
     postgres_password: str
     postgres_db: str
-    db_url: str = None
+    _db_url: str = None
 
-    def __post_init__(self):
-        if self.db_url is None:
-            self.db_url = (f"postgresql+asyncpg://{self.postgres_user}:"
-                           f"{self.postgres_password}@{self.postgres_host}:"
-                           f"{self.postgres_port}/{self.postgres_db}")
+    @property
+    def db_url(self) -> str:
+        if self._db_url is None:
+            self._db_url = (f"postgresql+asyncpg://{self.postgres_user}:"
+                            f"{self.postgres_password}@{self.postgres_host}:"
+                            f"{self.postgres_port}/{self.postgres_db}")
+        return self._db_url
 
 
 @dataclass
@@ -112,7 +114,6 @@ def load_config(path: str) -> Config:
             postgres_port=postgres_db.get("POSTGRES_PORT"),
             postgres_user=postgres_db.get("POSTGRES_USER"),
             postgres_password=postgres_db.get("POSTGRES_PASSWORD"),
-            postgres_db=postgres_db.get("POSTGRES_DB"),
-            db_url=PostgresDB.db_url
+            postgres_db=postgres_db.get("POSTGRES_DB")
         )
     )
