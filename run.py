@@ -6,19 +6,19 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.utils import executor
 
 from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.config import load_config
+from src.tgbot_expenses.config import Config
 from src.tgbot_expenses.middlewares import (AuthorizationMiddleware,
                                             StartOrContinueMiddleware,
-                                            UnknownMiddleware)
+                                            UnrecognizedMessageMiddleware)
 from src.tgbot_expenses.utils.load_modules import load_module
 
 logger = logging.getLogger(__name__)
-config = load_config("bot.ini")
+config = Config.load_config("bot.ini")
 
 
 bot = Bot(config.tg_bot.token)
 Bot.dispatch.middleware.setup(StartOrContinueMiddleware())
-Bot.dispatch.middleware.setup(UnknownMiddleware())
+Bot.dispatch.middleware.setup(UnrecognizedMessageMiddleware())
 Bot.dispatch.middleware.setup(AuthorizationMiddleware())
 Bot.dispatch.middleware.setup(LoggingMiddleware())
 
@@ -35,7 +35,6 @@ async def main():
         filemode='w'
     )
     logger.error("Starting bot")
-
     await load_module("dialogs", os.path.abspath("src"))
 
 

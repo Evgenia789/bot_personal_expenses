@@ -5,8 +5,8 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.commands.start import send_welcome
+from src.tgbot_expenses.services.category_service import archive_category
 from src.tgbot_expenses.states.chat_states import StateSettings
 
 
@@ -24,7 +24,7 @@ async def callbacks_delete_category(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    await database.archive_category(category_name=query.data)
+    await archive_category(category_name=query.data)
 
     last_message = await Bot.answer(
         message=query.message,

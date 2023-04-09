@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class QuestionText:
     """
     A dataclass representing the text of a questions.

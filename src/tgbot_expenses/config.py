@@ -38,7 +38,7 @@ class AllowedIds:
 
 
 @dataclass
-class PostgresDB:
+class PostgresDBConfig:
     """
     Represents a PostgreSQL database configuration.
 
@@ -48,20 +48,22 @@ class PostgresDB:
         postgres_user (str): The username for accessing the database.
         postgres_password (str): The password for accessing the database.
         postgres_db (str): The name of the PostgreSQL database to use.
-        db_url (str): The URL for connecting to the PostgreSQL database.
+        _db_url (str): The URL for connecting to the PostgreSQL database.
     """
     postgres_host: str
     postgres_port: str
     postgres_user: str
     postgres_password: str
     postgres_db: str
-    db_url: str = None
+    _db_url: str = None
 
-    def __post_init__(self):
-        if self.db_url is None:
-            self.db_url = (f"postgresql+asyncpg://{self.postgres_user}:"
-                           f"{self.postgres_password}@{self.postgres_host}:"
-                           f"{self.postgres_port}/{self.postgres_db}")
+    @property
+    def db_url(self) -> str:
+        if self._db_url is None:
+            self._db_url = (f"postgresql+asyncpg://{self.postgres_user}:"
+                            f"{self.postgres_password}@{self.postgres_host}:"
+                            f"{self.postgres_port}/{self.postgres_db}")
+        return self._db_url
 
 
 @dataclass
@@ -76,43 +78,32 @@ class Config:
     """
     tg_bot: TgBot
     ids: AllowedIds
-    postgres_db: PostgresDB
+    postgres_db: PostgresDBConfig
 
+    @classmethod
+    def load_config(cls, path: str) -> 'Config':
+        """
+        Load the configuration file in ini format located at the given path.
 
-def load_config(path: str) -> Config:
-    """
-    Load the configuration file in ini format located at the given path.
+        :param path: The path to the configuration file.
+        :type path: str
 
-    :param path: The path to the configuration file.
-    :type path: str
+        :return: A `Config` object containing all the configuration data.
 
-    :return: A `Config` object containing all the configuration data.
+        :raises MissingSectionHeaderError: If the configuration file is missing
+                                           a section header.
+        :raises ParsingError: If there is an error parsing
+                              the configuration file.
+        """
+        config = configparser.ConfigParser()
+        config.read(path, encoding="utf-8")
 
-    :raises MissingSectionHeaderError: If the configuration file is missing
-                                       a section header.
-    :raises ParsingError: If there is an error parsing the configuration file.
-    """
-    config = configparser.ConfigParser()
-    config.read(path, encoding="utf-8")
+        tg_bot = config["tg_bot"]
+        ids = config["allowed_ids"]
+        postgres_db = config["postgres_database"]
 
-    tg_bot = config["tg_bot"]
-    ids = config["allowed_ids"]
-    postgres_db = config["postgres_database"]
-
-    return Config(
-        tg_bot=TgBot(
-            token=tg_bot.get("TELEGRAM_TOKEN")
-        ),
-        ids=AllowedIds(
-            id_1=ids.getint("ID_1"),
-            id_2=ids.getint("ID_2")
-        ),
-        postgres_db=PostgresDB(
-            postgres_host=postgres_db.get("POSTGRES_HOST"),
-            postgres_port=postgres_db.get("POSTGRES_PORT"),
-            postgres_user=postgres_db.get("POSTGRES_USER"),
-            postgres_password=postgres_db.get("POSTGRES_PASSWORD"),
-            postgres_db=postgres_db.get("POSTGRES_DB"),
-            db_url=PostgresDB.db_url
+        return cls(
+            tg_bot=TgBot(token=tg_bot.get("TELEGRAM_TOKEN")),
+            ids=AllowedIds(**ids),
+            postgres_db=PostgresDBConfig(**postgres_db)
         )
-    )

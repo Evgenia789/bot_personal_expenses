@@ -5,8 +5,9 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.commands.start import send_welcome
+from src.tgbot_expenses.services.expense_service import insert_expense
+from src.tgbot_expenses.services.income_service import insert_income
 from src.tgbot_expenses.states.chat_states import StateChat
 from src.tgbot_expenses.utils.chart_and_statistics import \
     get_statistics_and_chart
@@ -36,12 +37,12 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
         # then the category name will be None
         category = data.get("category")
         if category is not None:
-            await database.insert_expense(category_name=data["category"],
-                                          account_name=data["account"],
-                                          amount=data["amount"])
+            await insert_expense(category_name=data["category"],
+                                 account_name=data["account"],
+                                 amount=data["amount"])
         else:
-            await database.insert_income(account_name=data["account"],
-                                         amount=data["amount"])
+            await insert_income(account_name=data["account"],
+                                amount=data["amount"])
 
     last_message = await Bot.answer(message=query.message,
                                     text=QuestionText.last_message)

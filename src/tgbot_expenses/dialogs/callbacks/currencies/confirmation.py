@@ -5,8 +5,8 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.commands.start import send_welcome
+from src.tgbot_expenses.services.account_service import update_amount
 from src.tgbot_expenses.states.chat_states import StateCurrencyExchange
 
 
@@ -30,7 +30,7 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
                               count=2)
 
     async with state.proxy() as data:
-        await database.update_amount(
+        await update_amount(
             account_from=data["account_from"],
             amount_old_currency=data["amount_old_currency"],
             currency_amount=data["currency_amount"],

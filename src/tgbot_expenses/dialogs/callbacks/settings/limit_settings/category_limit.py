@@ -2,9 +2,9 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.helpers.keyboards.back_or_main_menu import \
     get_keyboard_back_or_main_menu
+from src.tgbot_expenses.services.category_service import get_monthly_limit
 from src.tgbot_expenses.states.chat_states import StateSettings
 
 
@@ -25,7 +25,7 @@ async def callbacks_get_category_to_change_limit(query: types.CallbackQuery,
 
     await StateSettings.NewLimit.set()
 
-    limit_category = await database.get_monthly_limit(
+    limit_category = await get_monthly_limit(
         category_name=query.data
     )
 
