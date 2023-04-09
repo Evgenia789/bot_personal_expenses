@@ -80,18 +80,26 @@ async def update_amount(account_from: str,
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        account_obj_from = await session.execute(select(Account).where(
-            Account.name == account_from
-        ))
-        account_from = account_obj_from.scalars().first()
-        account_from.balance = account_from.balance - amount_old_currency
+        async with session.begin():
+            account_obj_from = await session.execute(
+                select(Account).where(
+                    Account.name == account_from
+                ).with_for_update()
+            )
+            account_obj_to = await session.execute(
+                select(Account).where(
+                    Account.name == account_to
+                ).with_for_update()
+            )
 
-        account_obj_to = await session.execute(select(Account).where(
-            Account.name == account_to
-        ))
-        account_to = account_obj_to.scalars().first()
-        account_to.balance = account_to.balance + currency_amount
-        await session.commit()
+            account_from = account_obj_from.scalars().first()
+            account_to = account_obj_to.scalars().first()
+
+            account_from.balance -= amount_old_currency
+            account_to.balance += currency_amount
+
+            await session.flush()
+            await session.commit()
 
     return
 
