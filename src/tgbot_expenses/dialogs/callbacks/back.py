@@ -3,7 +3,6 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.helpers.keyboards.changing_account import \
     get_keyboard_changing_account
 from src.tgbot_expenses.helpers.keyboards.changing_category import \
@@ -12,6 +11,7 @@ from src.tgbot_expenses.helpers.keyboards.main_menu import \
     get_keyboard_main_menu
 from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.helpers.keyboards.settings import get_keyboard_settings
+from src.tgbot_expenses.services.category_service import get_all_categories
 from src.tgbot_expenses.states.chat_states import StateChat, StateSettings
 
 
@@ -49,7 +49,7 @@ async def callbacks_back(query: types.CallbackQuery,
                 await StateSettings.MainMenu.set()
         elif current_state_name == "NewLimit":
             question = QuestionText.limits
-            categories = await database.get_all_categories()
+            categories = await get_all_categories()
             keyboard = get_keyboard_question(
                 button_names=(categories),
                 button_back=True

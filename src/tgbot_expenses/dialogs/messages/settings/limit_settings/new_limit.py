@@ -5,11 +5,11 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
 from src.tgbot_expenses.dialogs.messages.settings.beginning import \
     go_back_to_main_menu
+from src.tgbot_expenses.services.category_service import update_monthly_limit
 from src.tgbot_expenses.states.chat_states import StateInvalid, StateSettings
 
 
@@ -44,8 +44,8 @@ async def message_set_new_limit(message: types.Message,
         async with state.proxy() as data:
             current_category = data["current_category"]
 
-        await database.update_monthly_limit(category_name=current_category,
-                                            new_limit=message.text)
+        await update_monthly_limit(category_name=current_category,
+                                   new_limit=message.text)
 
         last_message = await Bot.answer(
             message=message,
