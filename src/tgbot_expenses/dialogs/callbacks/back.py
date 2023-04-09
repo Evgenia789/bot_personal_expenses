@@ -11,8 +11,9 @@ from src.tgbot_expenses.helpers.keyboards.main_menu import \
     get_keyboard_main_menu
 from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
 from src.tgbot_expenses.helpers.keyboards.settings import get_keyboard_settings
-from src.tgbot_expenses.services.category_service import get_all_categories
 from src.tgbot_expenses.states.chat_states import StateChat, StateSettings
+from src.tgbot_expenses.utils.queries_database import \
+    get_all_categories_with_retry
 
 
 @Bot.callback_query_handler(text="back", state="*")
@@ -49,7 +50,7 @@ async def callbacks_back(query: types.CallbackQuery,
                 await StateSettings.MainMenu.set()
         elif current_state_name == "NewLimit":
             question = QuestionText.limits
-            categories = await get_all_categories()
+            categories = await get_all_categories_with_retry()
             keyboard = get_keyboard_question(
                 button_names=(categories),
                 button_back=True

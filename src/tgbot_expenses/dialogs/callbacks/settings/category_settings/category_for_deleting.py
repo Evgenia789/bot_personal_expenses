@@ -4,8 +4,9 @@ from aiogram.dispatcher import FSMContext
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
-from src.tgbot_expenses.services.category_service import get_all_categories
 from src.tgbot_expenses.states.chat_states import StateSettings
+from src.tgbot_expenses.utils.queries_database import \
+    get_all_categories_with_retry
 
 
 @Bot.callback_query_handler(text="delete_category",
@@ -26,7 +27,7 @@ async def callbacks_get_category_for_deleting(query: types.CallbackQuery,
 
     await StateSettings.DeleteCategory.set()
 
-    categories = await get_all_categories()
+    categories = await get_all_categories_with_retry()
     await Bot.answer(
         message=query.message,
         text=QuestionText.archive_category,

@@ -8,9 +8,10 @@ from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
 from src.tgbot_expenses.helpers.keyboards.question import get_keyboard_question
-from src.tgbot_expenses.services.account_service import get_all_accounts
 from src.tgbot_expenses.states.chat_states import (StateCurrencyExchange,
                                                    StateInvalid)
+from src.tgbot_expenses.utils.queries_database import \
+    get_all_accounts_with_retry
 
 
 @Bot.message_handler(state=StateCurrencyExchange.FromAccountAmount,
@@ -45,7 +46,7 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
 
         await StateCurrencyExchange.next()
 
-        accounts = await get_all_accounts()
+        accounts = await get_all_accounts_with_retry()
         await Bot.answer(
             message=message,
             text=QuestionText.to_account,
