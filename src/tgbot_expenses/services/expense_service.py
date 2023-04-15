@@ -37,8 +37,6 @@ async def insert_expense(category_name: str, account_name: str,
         session.add(expense)
         await session.commit()
 
-    return
-
 
 async def get_monthly_expenses() -> List[Tuple]:
     """

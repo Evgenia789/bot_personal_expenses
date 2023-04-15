@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 from sqlalchemy.sql import select
@@ -23,8 +24,6 @@ async def insert_account(account_name: str, account_amount: Decimal) -> None:
         session.add(account)
         await session.commit()
 
-    return
-
 
 async def get_amount(account_id: int) -> Decimal:
     """
@@ -36,11 +35,10 @@ async def get_amount(account_id: int) -> Decimal:
     :return: The balance associated with the account.
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        account_obj = await session.execute(select(Account).where(
+        balance_obj = await session.execute(select(Account.balance).where(
             Account.id == account_id
         ))
-        account = account_obj.scalars().first()
-        balance = account.balance
+        balance = balance_obj.scalars().first()
 
         return balance
 
@@ -81,27 +79,30 @@ async def update_amount(account_from: str,
     """
     async with AsyncSessionWithEnter(database.engine) as session:
         async with session.begin():
-            account_obj_from = await session.execute(
-                select(Account).where(
-                    Account.name == account_from
-                ).with_for_update()
-            )
-            account_obj_to = await session.execute(
-                select(Account).where(
-                    Account.name == account_to
-                ).with_for_update()
-            )
+            try:
+                account_obj_from = await session.execute(
+                    select(Account).where(
+                        Account.name == account_from
+                    ).with_for_update()
+                )
+                account_obj_to = await session.execute(
+                    select(Account).where(
+                        Account.name == account_to
+                    ).with_for_update()
+                )
 
-            account_from = account_obj_from.scalars().first()
-            account_to = account_obj_to.scalars().first()
+                account_from = account_obj_from.scalars().first()
+                account_to = account_obj_to.scalars().first()
 
-            account_from.balance -= amount_old_currency
-            account_to.balance += currency_amount
+                account_from.balance -= amount_old_currency
+                account_to.balance += currency_amount
 
-            await session.flush()
-            await session.commit()
-
-    return
+                await session.flush()
+                await session.commit()
+            except AttributeError as e:
+                error_message = f"Error: {str(e)}. Account does not exist."
+                logging.error(error_message)
+                raise ValueError(error_message)
 
 
 async def archive_account(account_name: str) -> None:
@@ -120,5 +121,3 @@ async def archive_account(account_name: str) -> None:
         account = account_obj.scalars().first()
         account.account_status = "archive"
         await session.commit()
-
-    return
