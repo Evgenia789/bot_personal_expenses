@@ -26,5 +26,3 @@ async def insert_income(account_name: str, amount: Decimal) -> None:
         session.add(income)
         account.balance = account.balance + amount
         await session.commit()
-
-    return

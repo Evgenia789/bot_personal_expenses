@@ -31,7 +31,7 @@ async def callbacks_change_limit(query: types.CallbackQuery,
         message=query.message,
         text=QuestionText.limits,
         reply_markup=get_keyboard_question(
-            button_names=(categories),
+            button_names=categories,
             button_back=True
         )
     )

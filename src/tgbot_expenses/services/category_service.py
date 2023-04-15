@@ -23,8 +23,6 @@ async def insert_category(category_name: str, monthly_limit: Decimal) -> None:
         session.add(category)
         await session.commit()
 
-    return
-
 
 async def get_monthly_limit(category_name: str) -> Decimal:
     """
@@ -37,11 +35,12 @@ async def get_monthly_limit(category_name: str) -> Decimal:
     :return: The monthly limit for the category.
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        category_obj = await session.execute(select(Category).where(
-            Category.name == category_name
-        ))
-        category = category_obj.scalars().first()
-        monthly_limit = category.monthly_limit
+        monthly_limit_obj = await session.execute(
+            select(Category.monthly_limit).where(
+                Category.name == category_name
+            )
+        )
+        monthly_limit = monthly_limit_obj.scalars().first()
 
         return monthly_limit
 
@@ -80,8 +79,6 @@ async def update_monthly_limit(category_name: str, new_limit: Decimal) -> None:
         category.monthly_limit = new_limit
         await session.commit()
 
-    return
-
 
 async def archive_category(category_name: str) -> None:
     """
@@ -99,5 +96,3 @@ async def archive_category(category_name: str) -> None:
         category = category_obj.scalars().first()
         category.category_status = "archive"
         await session.commit()
-
-    return
