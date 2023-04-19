@@ -27,7 +27,9 @@ async def callbacks_get_account_for_deletting(query: types.CallbackQuery,
 
     await StateSettings.DeleteAccount.set()
 
-    accounts = await get_all_accounts_with_retry()
+    accounts = await get_all_accounts_with_retry(
+        telegram_id=query.from_user.id
+    )
     await Bot.answer(
         message=query.message,
         text=QuestionText.archive_account,

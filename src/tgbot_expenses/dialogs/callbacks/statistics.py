@@ -22,4 +22,5 @@ async def callbacks_view_statistics(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    await get_statistics_and_chart(query.message)
+    await get_statistics_and_chart(message=query.message,
+                                   telegram_id=query.from_user.id)

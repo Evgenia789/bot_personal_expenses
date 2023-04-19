@@ -46,7 +46,9 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
 
         await StateCurrencyExchange.next()
 
-        accounts = await get_all_accounts_with_retry()
+        accounts = await get_all_accounts_with_retry(
+            telegram_id=message.from_user.id
+        )
         await Bot.answer(
             message=message,
             text=QuestionText.to_account,

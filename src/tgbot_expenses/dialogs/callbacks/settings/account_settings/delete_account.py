@@ -26,7 +26,8 @@ async def callbacks_delete_account(query: types.CallbackQuery,
 
     await StateSettings.next()
 
-    await archive_account(account_name=query.data)
+    await archive_account(account_name=query.data,
+                          telegram_id=query.from_user.id)
 
     last_message = await Bot.answer(
         message=query.message,

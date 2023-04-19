@@ -26,7 +26,8 @@ async def callbacks_get_category_to_change_limit(query: types.CallbackQuery,
     await StateSettings.NewLimit.set()
 
     limit_category = await get_monthly_limit(
-        category_name=query.data
+        category_name=query.data,
+        telegram_id=query.from_user.id
     )
 
     async with state.proxy() as data:
