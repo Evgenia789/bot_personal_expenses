@@ -4,7 +4,6 @@ import logging
 from aiogram.utils import executor
 
 from src.tgbot_expenses.bot.initialization_bot import bot
-from src.tgbot_expenses.config import Config
 from src.tgbot_expenses.dialogs import *
 
 logger = logging.getLogger(__name__)
