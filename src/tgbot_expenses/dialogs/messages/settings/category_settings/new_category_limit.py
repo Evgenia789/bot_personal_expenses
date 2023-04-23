@@ -1,14 +1,16 @@
+from decimal import Decimal, InvalidOperation
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.messages.invalid_amount import \
     message_invalid_amount
 from src.tgbot_expenses.dialogs.messages.settings.beginning import \
     go_back_to_main_menu
 from src.tgbot_expenses.helpers.keyboards.back_or_main_menu import \
     get_keyboard_back_or_main_menu
+from src.tgbot_expenses.services.category_service import insert_category
 from src.tgbot_expenses.states.chat_states import StateInvalid, StateSettings
 
 
@@ -30,8 +32,8 @@ async def message_input_new_category(message: types.Message,
                               last_message_id=message.message_id, count=2)
 
     try:
-        limit = float(message.text.replace(",", "."))
-    except ValueError:
+        limit = Decimal(message.text.replace(",", "."))
+    except (ValueError, InvalidOperation):
         async with state.proxy() as data:
             data["previous_question"] = (
                 f"Current limit: {data['category_name']}\n"
@@ -49,8 +51,8 @@ async def message_input_new_category(message: types.Message,
         async with state.proxy() as data:
             name_new_category = data["category_name"]
 
-        database.insert_category(category_name=name_new_category,
-                                 limit_amount=limit)
+        await insert_category(category_name=name_new_category,
+                              monthly_limit=limit)
 
         message = await Bot.answer(
             message=message,

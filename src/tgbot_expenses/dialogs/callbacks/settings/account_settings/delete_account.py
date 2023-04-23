@@ -5,16 +5,16 @@ from aiogram.dispatcher import FSMContext
 
 from src.tgbot_expenses.bot import Bot
 from src.tgbot_expenses.constants import QuestionText
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.dialogs.commands.start import send_welcome
+from src.tgbot_expenses.services.account_service import archive_account
 from src.tgbot_expenses.states.chat_states import StateSettings
 
 
-@Bot.callback_query_handler(state=StateSettings.DeleteBill)
-async def callbacks_delete_bill(query: types.CallbackQuery,
-                                state: FSMContext) -> None:
+@Bot.callback_query_handler(state=StateSettings.DeleteAccount)
+async def callbacks_delete_account(query: types.CallbackQuery,
+                                   state: FSMContext) -> None:
     """
-    Handles the button press for deleting a bill.
+    Handles the button press for deleting an account.
 
     :param query: The query object representing the button press.
     :type query: types.CallbackQuery
@@ -26,7 +26,7 @@ async def callbacks_delete_bill(query: types.CallbackQuery,
 
     await StateSettings.next()
 
-    database.archive_bill(bill_name=query.data)
+    await archive_account(account_name=query.data)
 
     last_message = await Bot.answer(
         message=query.message,

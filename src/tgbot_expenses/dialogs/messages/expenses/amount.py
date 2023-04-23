@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
@@ -28,8 +30,8 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
                               last_message_id=message.message_id, count=2)
 
     try:
-        amount = float(message.text.replace(",", "."))
-    except ValueError:
+        amount = Decimal(message.text.replace(",", "."))
+    except (ValueError, InvalidOperation):
         async with state.proxy() as data:
             data["previous_question"] = QuestionText.amount
             data["state"] = await state.get_state()
@@ -42,15 +44,15 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
             category = data.get("category")
             data["amount"] = round(amount, 2) \
                 if category is None \
-                else await get_dollar_amount(data["bill"], amount)
-            bill = data["bill"]
+                else await get_dollar_amount(data["account"], amount)
+            account = data["account"]
 
         await StateChat.DataConfirmation.set()
 
         category_text = f"<b>Category:</b> {category} \n" \
             if category is not None else ""
 
-        text_message = category_text + (f"<b>Bill:</b> {bill}\n"
+        text_message = category_text + (f"<b>Account:</b> {account}\n"
                                         f"<b>Amount:</b> {amount}\n\n"
                                         ) + QuestionText.confirmation
 

@@ -1,32 +1,18 @@
 import asyncio
 import logging
-import os
 
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.utils import executor
 
-from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.config import load_config
-from src.tgbot_expenses.middlewares import (AuthorizationMiddleware,
-                                            StartOrContinueMiddleware,
-                                            UnknownMiddleware)
-from src.tgbot_expenses.utils.load_modules import load_module
+from src.tgbot_expenses.bot.initialization_bot import bot
+from src.tgbot_expenses.config import Config
+from src.tgbot_expenses.dialogs import *
 
 logger = logging.getLogger(__name__)
-config = load_config("bot.ini")
 
 
-bot = Bot(config.tg_bot.token)
-Bot.dispatch.middleware.setup(StartOrContinueMiddleware())
-Bot.dispatch.middleware.setup(UnknownMiddleware())
-Bot.dispatch.middleware.setup(AuthorizationMiddleware())
-Bot.dispatch.middleware.setup(LoggingMiddleware())
-
-
-def main():
+async def main():
     """
-    Initializes the logging configuration, loads the "dialogs" module,
-    and starts the bot by polling for updates.
+    Initializes the logging configuration and loads the "dialogs" module.
     """
     logging.basicConfig(
         level=logging.INFO,
@@ -36,13 +22,13 @@ def main():
         filemode='w'
     )
     logger.error("Starting bot")
-    load_module("dialogs", cur_dir=os.path.abspath("src"))
-
-    executor.start_polling(bot, skip_updates=False)
 
 
 if __name__ == '__main__':
     try:
-        asyncio.run(main())
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.create_task(main())
+        executor.start_polling(bot, skip_updates=False, loop=loop)
     except (KeyboardInterrupt, SystemExit):
         logger.error("Bot stopped!")

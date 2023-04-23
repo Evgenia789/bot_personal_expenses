@@ -1,8 +1,8 @@
 from aiogram import types
 
-from src.tgbot_expenses.database.db import database
 from src.tgbot_expenses.helpers.keyboards.back_or_main_menu import \
     get_keyboard_back_or_main_menu
+from src.tgbot_expenses.services.expense_service import get_monthly_expenses
 from src.tgbot_expenses.utils.expense_chart import get_chart
 from src.tgbot_expenses.utils.text_statistics import get_data
 
@@ -16,7 +16,7 @@ async def get_statistics_and_chart(message: types.Message) -> types.Message:
     :type message: types.Message
     :return: types.Message
     """
-    monthly_expense_data = database.fetchallmonth()
+    monthly_expense_data = await get_monthly_expenses()
 
     text_message = await get_data(data=monthly_expense_data)
     path_to_chart = await get_chart(data=monthly_expense_data)

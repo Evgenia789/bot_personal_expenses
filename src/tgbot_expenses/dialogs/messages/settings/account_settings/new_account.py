@@ -6,12 +6,12 @@ from src.tgbot_expenses.constants import QuestionText
 from src.tgbot_expenses.states.chat_states import StateSettings
 
 
-@Bot.message_handler(state=StateSettings.AddBill,
+@Bot.message_handler(state=StateSettings.AddAccount,
                      content_types=types.ContentType.ANY)
-async def message_input_new_bill(message: types.Message,
-                                 state: FSMContext) -> None:
+async def message_input_new_account(message: types.Message,
+                                    state: FSMContext) -> None:
     """
-    Processes the user's message about the name of the new bill.
+    Processes the user's message about the name of the new account.
 
     :param message: The Message object containing the user's input message.
     :type message: types.Message

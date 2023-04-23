@@ -2,7 +2,7 @@
 This module defines the load_config function to read and load a configuration
 file in ini format into a Config object.
 The Config object is defined as a dataclass containing TgBot, AllowedIds, and
-GoogleTables objects, also defined as dataclasses.
+PostgresDB objects, also defined as dataclasses.
 
 This module requires the configparser and dataclasses modules to be imported.
 
@@ -38,22 +38,32 @@ class AllowedIds:
 
 
 @dataclass
-class GoogleTables:
+class PostgresDBConfig:
     """
-    Google Sheets tables configuration.
+    Represents a PostgreSQL database configuration.
 
     Attributes:
-        spreadsheet (str): Name of the spreadsheet.
-        expenses (str): Name of the expenses table.
-        incomes (str): Name of the incomes table.
-        currency (str): Name of the currency table.
-        total_amount (str): Name of the total amount table.
+        postgres_host (str): The hostname of the PostgreSQL server.
+        postgres_port (int): The port number of the PostgreSQL server.
+        postgres_user (str): The username for accessing the database.
+        postgres_password (str): The password for accessing the database.
+        postgres_db (str): The name of the PostgreSQL database to use.
+        _db_url (str): The URL for connecting to the PostgreSQL database.
     """
-    spreadsheet: str
-    expenses: str
-    incomes: str
-    currency: str
-    total_amount: str
+    postgres_host: str
+    postgres_port: str
+    postgres_user: str
+    postgres_password: str
+    postgres_db: str
+    _db_url: str = None
+
+    @property
+    def db_url(self) -> str:
+        if self._db_url is None:
+            self._db_url = (f"postgresql+asyncpg://{self.postgres_user}:"
+                            f"{self.postgres_password}@{self.postgres_host}:"
+                            f"{self.postgres_port}/{self.postgres_db}")
+        return self._db_url
 
 
 @dataclass
@@ -64,46 +74,36 @@ class Config:
     Attributes:
         tg_bot (TgBot): Telegram Bot token configuration.
         ids (AllowedIds): Allowed user IDs configuration.
-        googletables (GoogleTables): Google Sheets tables configuration.
+        postgres_db (PostgresDB): PostgreSQL database configuration.
     """
     tg_bot: TgBot
     ids: AllowedIds
-    googletables: GoogleTables
+    postgres_db: PostgresDBConfig
 
+    @classmethod
+    def load_config(cls, path: str) -> 'Config':
+        """
+        Load the configuration file in ini format located at the given path.
 
-def load_config(path: str) -> Config:
-    """
-    Load the configuration file in ini format located at the given path.
+        :param path: The path to the configuration file.
+        :type path: str
 
-    :param path: The path to the configuration file.
-    :type path: str
+        :return: A `Config` object containing all the configuration data.
 
-    :return: A `Config` object containing all the configuration data.
+        :raises MissingSectionHeaderError: If the configuration file is missing
+                                           a section header.
+        :raises ParsingError: If there is an error parsing
+                              the configuration file.
+        """
+        config = configparser.ConfigParser()
+        config.read(path, encoding="utf-8")
 
-    :raises MissingSectionHeaderError: If the configuration file is missing
-                                       a section header.
-    :raises ParsingError: If there is an error parsing the configuration file.
-    """
-    config = configparser.ConfigParser()
-    config.read(path, encoding="utf-8")
+        tg_bot = config["tg_bot"]
+        ids = config["allowed_ids"]
+        postgres_db = config["postgres_database"]
 
-    tg_bot = config["tg_bot"]
-    ids = config["allowed_ids"]
-    googletables = config["google_tables"]
-
-    return Config(
-        tg_bot=TgBot(
-            token=tg_bot.get("TELEGRAM_TOKEN")
-        ),
-        ids=AllowedIds(
-            id_1=ids.getint("ID_1"),
-            id_2=ids.getint("ID_2")
-        ),
-        googletables=GoogleTables(
-            spreadsheet=googletables.get("spreadsheet"),
-            expenses=googletables.get("expenses"),
-            incomes=googletables.get("incomes"),
-            currency=googletables.get("currency"),
-            total_amount=googletables.get("total_amount")
+        return cls(
+            tg_bot=TgBot(token=tg_bot.get("TELEGRAM_TOKEN")),
+            ids=AllowedIds(**ids),
+            postgres_db=PostgresDBConfig(**postgres_db)
         )
-    )
