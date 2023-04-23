@@ -26,7 +26,9 @@ async def callbacks_change_limit(query: types.CallbackQuery,
 
     await StateSettings.ChangeLimit.set()
 
-    categories = await get_all_categories_with_retry()
+    categories = await get_all_categories_with_retry(
+        telegram_id=query.from_user.id
+    )
     await Bot.answer(
         message=query.message,
         text=QuestionText.limits,

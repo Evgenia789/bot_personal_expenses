@@ -34,7 +34,8 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
             account_from=data["account_from"],
             amount_old_currency=data["amount_old_currency"],
             currency_amount=data["currency_amount"],
-            account_to=data["account_to"]
+            account_to=data["account_to"],
+            telegram_id=query.from_user.id
         )
 
     last_message = await Bot.answer(message=query.message,

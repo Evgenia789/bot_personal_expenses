@@ -1,7 +1,7 @@
 """
 This module defines the load_config function to read and load a configuration
 file in ini format into a Config object.
-The Config object is defined as a dataclass containing TgBot, AllowedIds, and
+The Config object is defined as a dataclass containing TgBot, and
 PostgresDB objects, also defined as dataclasses.
 
 This module requires the configparser and dataclasses modules to be imported.
@@ -22,19 +22,6 @@ class TgBot:
         token (str): Telegram Bot token.
     """
     token: str
-
-
-@dataclass
-class AllowedIds:
-    """
-    Allowed user IDs configuration.
-
-    Attributes:
-        id_1 (int): First allowed user ID.
-        id_2 (int): Second allowed user ID.
-    """
-    id_1: int
-    id_2: int
 
 
 @dataclass
@@ -73,11 +60,9 @@ class Config:
 
     Attributes:
         tg_bot (TgBot): Telegram Bot token configuration.
-        ids (AllowedIds): Allowed user IDs configuration.
         postgres_db (PostgresDB): PostgreSQL database configuration.
     """
     tg_bot: TgBot
-    ids: AllowedIds
     postgres_db: PostgresDBConfig
 
     @classmethod
@@ -99,11 +84,9 @@ class Config:
         config.read(path, encoding="utf-8")
 
         tg_bot = config["tg_bot"]
-        ids = config["allowed_ids"]
         postgres_db = config["postgres_database"]
 
         return cls(
             tg_bot=TgBot(token=tg_bot.get("TELEGRAM_TOKEN")),
-            ids=AllowedIds(**ids),
             postgres_db=PostgresDBConfig(**postgres_db)
         )

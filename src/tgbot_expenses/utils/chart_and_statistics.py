@@ -7,7 +7,8 @@ from src.tgbot_expenses.utils.expense_chart import get_chart
 from src.tgbot_expenses.utils.text_statistics import get_data
 
 
-async def get_statistics_and_chart(message: types.Message) -> types.Message:
+async def get_statistics_and_chart(message: types.Message,
+                                   telegram_id: int) -> types.Message:
     """
     Retrieve monthly expense data from the database, generate a chart
     and a message containing the data, and send them to the user.
@@ -16,7 +17,9 @@ async def get_statistics_and_chart(message: types.Message) -> types.Message:
     :type message: types.Message
     :return: types.Message
     """
-    monthly_expense_data = await get_monthly_expenses()
+    monthly_expense_data = await get_monthly_expenses(
+        telegram_id=telegram_id
+    )
 
     text_message = await get_data(data=monthly_expense_data)
     path_to_chart = await get_chart(data=monthly_expense_data)

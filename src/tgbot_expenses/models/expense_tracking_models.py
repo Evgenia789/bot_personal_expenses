@@ -6,6 +6,30 @@ from sqlalchemy.sql import func
 Base = declarative_base()
 
 
+class User(Base):
+    """
+    Represents a user.
+    Attributes:
+        id (int): primary key identifier for the user
+        telegram_user_id (int): The user's Telegram ID.
+    Relationships:
+        categories (List[Category]): the categories that belong to this user
+        accounts (List[Account]): the accounts that belong to this user
+        expenses (List[Expense]): the expenses that belong to this user
+        incomes (List[Income]): the incomes that belong to this user
+    """
+    __tablename__ = 'users'
+
+    id = sa.Column(sa.Integer, primary_key=True, index=True,
+                   autoincrement=True)
+    telegram_id = sa.Column(sa.BigInteger, nullable=False)
+
+    categories = relationship("Category", back_populates="users")
+    accounts = relationship("Account", back_populates="users")
+    expenses = relationship("Expense", back_populates="users")
+    incomes = relationship("Income", back_populates="users")
+
+
 class Category(Base):
     """
     Represents a spending category, with a name and monthly spending limit.
@@ -16,9 +40,12 @@ class Category(Base):
         monthly_limit (Decimal): maximum amount that can be spent in this
                                  category per month
         category_status (str): status of the category, defaults to "active"
+        user_id (int): foreign key reference to the user this
+                       expense belongs to
 
     Relationships:
-        expenses (List[Expense]): all expenses that belong to this category
+        expenses (List[Expense]): the expenses that belong to this category
+        users (List[User]): thel users that belong to this category
     """
     __tablename__ = 'categories'
 
@@ -28,8 +55,10 @@ class Category(Base):
     monthly_limit = sa.Column(sa.DECIMAL, nullable=False)
     category_status = sa.Column(sa.String(10), nullable=False,
                                 default="active")
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
 
-    expenses = relationship("Expense", back_populates="category")
+    expenses = relationship("Expense", back_populates="categories")
+    users = relationship("User", back_populates="categories")
 
 
 class Account(Base):
@@ -41,10 +70,13 @@ class Account(Base):
         name (str): name of the account
         balance (Decimal): current balance of the account
         account_status (str): status of the account, defaults to "active"
+        user_id (int): foreign key reference to the user this
+                       expense belongs to
 
     Relationships:
-        expenses (List[Expense]): all expenses that belong to this account
-        incomes (List[Income]): all incomes that belong to this account
+        expenses (List[Expense]): the expenses that belong to this account
+        incomes (List[Income]): the incomes that belong to this account
+        users (List[User]): the users that belong to this account
     """
     __tablename__ = 'accounts'
 
@@ -53,9 +85,11 @@ class Account(Base):
     name = sa.Column(sa.String(50), nullable=False)
     balance = sa.Column(sa.DECIMAL, nullable=False)
     account_status = sa.Column(sa.String(10), nullable=False, default="active")
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
 
-    expenses = relationship("Expense", back_populates="account")
-    incomes = relationship("Income", back_populates="account")
+    expenses = relationship("Expense", back_populates="accounts")
+    incomes = relationship("Income", back_populates="accounts")
+    users = relationship("User", back_populates="accounts")
 
 
 class Expense(Base):
@@ -71,10 +105,13 @@ class Expense(Base):
         account_id (int): foreign key reference to the account this
                           expense belongs to
         date (datetime): date and time the expense occurred
+        user_id (int): foreign key reference to the user this
+                       expense belongs to
 
     Relationships:
-        category (Category): the category that this expense belongs to
-        account (Account): the account that this expense belongs to
+        category (Category): the categories that this expense belongs to
+        account (Account): the accounts that this expense belongs to
+        users (User): the users that this expense belongs to
     """
     __tablename__ = 'expenses'
 
@@ -86,9 +123,11 @@ class Expense(Base):
     account_id = sa.Column(sa.Integer, sa.ForeignKey("accounts.id"),
                            nullable=False)
     date = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
 
-    category = relationship("Category", back_populates="expenses")
-    account = relationship("Account", back_populates="expenses")
+    categories = relationship("Category", back_populates="expenses")
+    accounts = relationship("Account", back_populates="expenses")
+    users = relationship("User", back_populates="expenses")
 
 
 class Income(Base):
@@ -102,9 +141,12 @@ class Income(Base):
         account_id (int): foreign key reference to the account this
                           income belongs to
         date (datetime): date and time the income was received
+        user_id (int): foreign key reference to the user this
+                       income belongs to
 
     Relationships:
         account (Account): the account that this income belongs to
+        users (User): the users that this income belongs to
     """
     __tablename__ = 'incomes'
 
@@ -114,5 +156,7 @@ class Income(Base):
     account_id = sa.Column(sa.Integer, sa.ForeignKey("accounts.id"),
                            nullable=False)
     date = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
+    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
 
-    account = relationship("Account", back_populates="incomes")
+    accounts = relationship("Account", back_populates="incomes")
+    users = relationship("User", back_populates="incomes")

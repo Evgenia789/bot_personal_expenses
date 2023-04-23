@@ -29,7 +29,9 @@ async def callbacks_exchange_currency(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    accounts = await get_all_accounts_with_retry()
+    accounts = await get_all_accounts_with_retry(
+        telegram_id=query.from_user.id
+    )
 
     if not accounts:
         await StateEmpty.InvalidEmpty.set()
