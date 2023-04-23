@@ -52,7 +52,8 @@ async def message_input_new_category(message: types.Message,
             name_new_category = data["category_name"]
 
         await insert_category(category_name=name_new_category,
-                              monthly_limit=limit)
+                              monthly_limit=limit,
+                              telegram_id=message.from_user.id)
 
         message = await Bot.answer(
             message=message,

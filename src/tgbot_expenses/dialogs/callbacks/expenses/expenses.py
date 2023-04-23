@@ -26,7 +26,9 @@ async def callbacks_make_expenses(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    categories = await get_all_categories_with_retry()
+    categories = await get_all_categories_with_retry(
+        telegram_id=query.from_user.id
+    )
 
     if not categories:
         await StateEmpty.InvalidEmpty.set()

@@ -24,7 +24,8 @@ async def callbacks_delete_category(query: types.CallbackQuery,
     """
     await query.message.delete()
 
-    await archive_category(category_name=query.data)
+    await archive_category(category_name=query.data,
+                           telegram_id=query.from_user.id)
 
     last_message = await Bot.answer(
         message=query.message,

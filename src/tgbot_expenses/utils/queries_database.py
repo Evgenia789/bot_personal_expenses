@@ -5,7 +5,8 @@ from src.tgbot_expenses.services.account_service import get_all_accounts
 from src.tgbot_expenses.services.category_service import get_all_categories
 
 
-async def get_all_accounts_with_retry(max_retries: int = 3,
+async def get_all_accounts_with_retry(telegram_id: int,
+                                      max_retries: int = 3,
                                       retry_delay: int = 60) -> str:
     """
     Attempt to retrieve all accounts with retries.
@@ -22,7 +23,7 @@ async def get_all_accounts_with_retry(max_retries: int = 3,
     """
     for i in range(max_retries):
         try:
-            accounts = await get_all_accounts()
+            accounts = await get_all_accounts(telegram_id=telegram_id)
             return accounts
         except Exception as e:
             logging.error(f"Error getting accounts: {e}")
@@ -33,7 +34,8 @@ async def get_all_accounts_with_retry(max_retries: int = 3,
                 raise
 
 
-async def get_all_categories_with_retry(max_retries: int = 3,
+async def get_all_categories_with_retry(telegram_id: int,
+                                        max_retries: int = 3,
                                         retry_delay: int = 60) -> str:
     """
     Attempt to retrieve all categories with retries.
@@ -50,7 +52,7 @@ async def get_all_categories_with_retry(max_retries: int = 3,
     """
     for i in range(max_retries):
         try:
-            categories = await get_all_categories()
+            categories = await get_all_categories(telegram_id=telegram_id)
             return categories
         except Exception as e:
             logging.error(f"Error getting accounts: {e}")

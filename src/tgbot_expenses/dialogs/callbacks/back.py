@@ -50,7 +50,9 @@ async def callbacks_back(query: types.CallbackQuery,
                 await StateSettings.MainMenu.set()
         elif current_state_name == "NewLimit":
             question = QuestionText.limits
-            categories = await get_all_categories_with_retry()
+            categories = await get_all_categories_with_retry(
+                telegram_id=query.from_user.id
+            )
             keyboard = get_keyboard_question(
                 button_names=(categories),
                 button_back=True

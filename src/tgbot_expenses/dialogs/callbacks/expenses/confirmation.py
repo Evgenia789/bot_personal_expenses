@@ -39,10 +39,12 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
         if category is not None:
             await insert_expense(category_name=data["category"],
                                  account_name=data["account"],
-                                 amount=data["amount"])
+                                 amount=data["amount"],
+                                 telegram_id=query.from_user.id)
         else:
             await insert_income(account_name=data["account"],
-                                amount=data["amount"])
+                                amount=data["amount"],
+                                telegram_id=query.from_user.id)
 
     last_message = await Bot.answer(message=query.message,
                                     text=QuestionText.last_message)
@@ -51,7 +53,8 @@ async def callbacks_confirmation_data(query: types.CallbackQuery,
 
     if category is not None:
         await last_message.delete()
-        await get_statistics_and_chart(query.message)
+        await get_statistics_and_chart(query.message,
+                                       telegram_id=query.from_user.id)
     else:
         await send_welcome(message=last_message, state=state)
 
