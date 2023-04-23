@@ -29,3 +29,5 @@ class QuestionText:
     empty_data = ("The required categories or accounts have not been created."
                   "\nYou need to add them via `Settings`-> `Change account`/"
                   "`Change Category`/ -> `Add Account`/`Add Category`.")
+    initialization = ("You should press the /init command "
+                      "to start using the bot")
