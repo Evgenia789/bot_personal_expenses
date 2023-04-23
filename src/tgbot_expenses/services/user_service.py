@@ -1,4 +1,5 @@
 from typing import Union
+
 from sqlalchemy.sql import select
 
 from src.tgbot_expenses.database.db import AsyncSessionWithEnter, database
