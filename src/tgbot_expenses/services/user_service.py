@@ -14,7 +14,7 @@ async def insert_user(telegram_id: int) -> None:
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user = User(telegram_id=telegram_id)
+        user = User(id=telegram_id)
         session.add(user)
         await session.commit()
 
@@ -29,7 +29,7 @@ async def get_user_id(telegram_id: int) -> Union[int, None]:
     """
     async with AsyncSessionWithEnter(database.engine) as session:
         result = await session.execute(select(User.id).where(
-            User.telegram_id == telegram_id
+            User.id == telegram_id
         ))
 
         user_id = result.scalar_one_or_none()
