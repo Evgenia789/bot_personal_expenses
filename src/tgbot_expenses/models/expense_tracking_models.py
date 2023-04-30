@@ -10,8 +10,7 @@ class User(Base):
     """
     Represents a user.
     Attributes:
-        id (int): primary key identifier for the user
-        telegram_user_id (int): The user's Telegram ID.
+        id (int): identifier for the user via telegram_id as a primary key.
     Relationships:
         categories (List[Category]): the categories that belong to this user
         accounts (List[Account]): the accounts that belong to this user
@@ -20,9 +19,7 @@ class User(Base):
     """
     __tablename__ = 'users'
 
-    id = sa.Column(sa.Integer, primary_key=True, index=True,
-                   autoincrement=True)
-    telegram_id = sa.Column(sa.BigInteger, nullable=False)
+    id = sa.Column(sa.BigInteger, primary_key=True, index=True)
 
     categories = relationship("Category", back_populates="users")
     accounts = relationship("Account", back_populates="users")
@@ -55,7 +52,8 @@ class Category(Base):
     monthly_limit = sa.Column(sa.DECIMAL, nullable=False)
     category_status = sa.Column(sa.String(10), nullable=False,
                                 default="active")
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
+    user_id = sa.Column(sa.BigInteger, sa.ForeignKey("users.id"),
+                        nullable=False)
 
     expenses = relationship("Expense", back_populates="categories")
     users = relationship("User", back_populates="categories")
@@ -85,7 +83,8 @@ class Account(Base):
     name = sa.Column(sa.String(50), nullable=False)
     balance = sa.Column(sa.DECIMAL, nullable=False)
     account_status = sa.Column(sa.String(10), nullable=False, default="active")
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
+    user_id = sa.Column(sa.BigInteger, sa.ForeignKey("users.id"),
+                        nullable=False)
 
     expenses = relationship("Expense", back_populates="accounts")
     incomes = relationship("Income", back_populates="accounts")
@@ -123,7 +122,8 @@ class Expense(Base):
     account_id = sa.Column(sa.Integer, sa.ForeignKey("accounts.id"),
                            nullable=False)
     date = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
+    user_id = sa.Column(sa.BigInteger, sa.ForeignKey("users.id"),
+                        nullable=False)
 
     categories = relationship("Category", back_populates="expenses")
     accounts = relationship("Account", back_populates="expenses")
@@ -156,7 +156,8 @@ class Income(Base):
     account_id = sa.Column(sa.Integer, sa.ForeignKey("accounts.id"),
                            nullable=False)
     date = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
-    user_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"), nullable=False)
+    user_id = sa.Column(sa.BigInteger, sa.ForeignKey("users.id"),
+                        nullable=False)
 
     accounts = relationship("Account", back_populates="incomes")
     users = relationship("User", back_populates="incomes")
