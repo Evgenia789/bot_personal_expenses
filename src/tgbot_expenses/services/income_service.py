@@ -4,7 +4,6 @@ from sqlalchemy.sql import select
 
 from src.tgbot_expenses.database.db import AsyncSessionWithEnter, database
 from src.tgbot_expenses.models.expense_tracking_models import Account, Income
-from src.tgbot_expenses.services.user_service import get_user_id
 
 
 async def insert_income(account_name: str, amount: Decimal,
@@ -21,12 +20,12 @@ async def insert_income(account_name: str, amount: Decimal,
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         account_obj = await session.execute(select(Account).where(
-            Account.user_id == user_id, Account.name == account_name
+            Account.user_id == telegram_id, Account.name == account_name
         ))
         account = account_obj.scalars().first()
-        income = Income(amount=amount, account_id=account.id, user_id=user_id)
+        income = Income(amount=amount, account_id=account.id,
+                        user_id=telegram_id)
         session.add(income)
         account.balance = account.balance + amount
         await session.commit()

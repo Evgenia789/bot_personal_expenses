@@ -4,7 +4,6 @@ from sqlalchemy.sql import select
 
 from src.tgbot_expenses.database.db import AsyncSessionWithEnter, database
 from src.tgbot_expenses.models.expense_tracking_models import Category
-from src.tgbot_expenses.services.user_service import get_user_id
 
 
 async def insert_category(category_name: str, monthly_limit: Decimal,
@@ -21,10 +20,9 @@ async def insert_category(category_name: str, monthly_limit: Decimal,
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         category = Category(name=category_name,
                             monthly_limit=monthly_limit,
-                            user_id=user_id)
+                            user_id=telegram_id)
         session.add(category)
         await session.commit()
 
@@ -41,10 +39,9 @@ async def get_monthly_limit(category_name: str, telegram_id: int) -> Decimal:
     :return: The monthly limit for the category.
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         monthly_limit_obj = await session.execute(
             select(Category.monthly_limit).where(
-                Category.user_id == user_id, Category.name == category_name
+                Category.user_id == telegram_id, Category.name == category_name
             )
         )
         monthly_limit = monthly_limit_obj.scalars().first()
@@ -61,9 +58,9 @@ async def get_all_categories(telegram_id: int) -> str:
                 separated by semicolons.
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         categories = await session.execute(select(Category.name).where(
-            Category.user_id == user_id, Category.category_status == "active"
+            Category.user_id == telegram_id,
+            Category.category_status == "active"
         ))
 
         return ";".join([category[0] for category in categories])
@@ -83,9 +80,8 @@ async def update_monthly_limit(category_name: str, new_limit: Decimal,
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         category_obj = await session.execute(select(Category).where(
-            Category.user_id == user_id, Category.name == category_name
+            Category.user_id == telegram_id, Category.name == category_name
         ))
         category = category_obj.scalars().first()
         category.monthly_limit = new_limit
@@ -103,9 +99,8 @@ async def archive_category(category_name: str, telegram_id: int) -> None:
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         category_obj = await session.execute(select(Category).where(
-            Category.user_id == user_id, Category.name == category_name
+            Category.user_id == telegram_id, Category.name == category_name
         ))
         category = category_obj.scalars().first()
         category.category_status = "archive"
