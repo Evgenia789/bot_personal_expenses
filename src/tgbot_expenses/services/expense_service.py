@@ -7,7 +7,6 @@ from src.tgbot_expenses.database.db import AsyncSessionWithEnter, database
 from src.tgbot_expenses.models.expense_tracking_models import (Account,
                                                                Category,
                                                                Expense)
-from src.tgbot_expenses.services.user_service import get_user_id
 
 
 async def insert_expense(category_name: str, account_name: str,
@@ -26,17 +25,16 @@ async def insert_expense(category_name: str, account_name: str,
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         category_obj = await session.execute(select(Category).where(
-            Category.user_id == user_id, Category.name == category_name
+            Category.user_id == telegram_id, Category.name == category_name
         ))
         category = category_obj.scalars().first()
         account_obj = await session.execute(select(Account).where(
-            Account.user_id == user_id, Account.name == account_name
+            Account.user_id == telegram_id, Account.name == account_name
         ))
         account = account_obj.scalars().first()
         expense = Expense(amount=amount, category_id=category.id,
-                          account_id=account.id, user_id=user_id)
+                          account_id=account.id, user_id=telegram_id)
         session.add(expense)
         await session.commit()
 
@@ -52,7 +50,6 @@ async def get_monthly_expenses(telegram_id: int) -> List[Tuple]:
              the current month.
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         query = select(
             Category.name,
             Category.monthly_limit.label("limit_expenses"),
@@ -61,7 +58,7 @@ async def get_monthly_expenses(telegram_id: int) -> List[Tuple]:
         ).select_from(
             join(Category, Expense, Category.id == Expense.category_id)
         ).where(
-            Category.user_id == user_id,
+            Category.user_id == telegram_id,
             extract('year', Expense.date) == extract('year', func.now()),
             extract('month', Expense.date) == extract('month', func.now())
         ).group_by(Category.name,

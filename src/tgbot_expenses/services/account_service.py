@@ -5,7 +5,6 @@ from sqlalchemy.sql import select
 
 from src.tgbot_expenses.database.db import AsyncSessionWithEnter, database
 from src.tgbot_expenses.models.expense_tracking_models import Account
-from src.tgbot_expenses.services.user_service import get_user_id
 
 
 async def insert_account(account_name: str, account_amount: Decimal,
@@ -23,9 +22,8 @@ async def insert_account(account_name: str, account_amount: Decimal,
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         account = Account(name=account_name, balance=account_amount,
-                          user_id=user_id)
+                          user_id=telegram_id)
         session.add(account)
         await session.commit()
 
@@ -42,9 +40,8 @@ async def get_amount(account_id: int, telegram_id: int) -> Decimal:
     :return: The balance associated with the account.
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         balance_obj = await session.execute(select(Account.balance).where(
-            Account.user_id == user_id, Account.id == account_id
+            Account.user_id == telegram_id, Account.id == account_id
         ))
         balance = balance_obj.scalars().first()
 
@@ -60,9 +57,8 @@ async def get_all_accounts(telegram_id: int) -> str:
              separated by semicolons.
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         accounts = await session.execute(select(Account.name).where(
-            Account.user_id == user_id, Account.account_status == "active"
+            Account.user_id == telegram_id, Account.account_status == "active"
         ))
 
         return ";".join([account[0] for account in accounts])
@@ -91,17 +87,17 @@ async def update_amount(account_from: str,
     """
     async with AsyncSessionWithEnter(database.engine) as session:
         async with session.begin():
-            user_id = await get_user_id(telegram_id=telegram_id)
             try:
                 account_obj_from = await session.execute(
                     select(Account).where(
-                        Account.user_id == user_id,
+                        Account.user_id == telegram_id,
                         Account.name == account_from
                     ).with_for_update()
                 )
                 account_obj_to = await session.execute(
                     select(Account).where(
-                        Account.user_id == user_id, Account.name == account_to
+                        Account.user_id == telegram_id,
+                        Account.name == account_to
                     ).with_for_update()
                 )
 
@@ -128,9 +124,8 @@ async def archive_account(account_name: str, telegram_id: int) -> None:
     :return: None
     """
     async with AsyncSessionWithEnter(database.engine) as session:
-        user_id = await get_user_id(telegram_id=telegram_id)
         account_obj = await session.execute(select(Account).where(
-            Account.user_id == user_id, Account.name == account_name
+            Account.user_id == telegram_id, Account.name == account_name
         ))
         account = account_obj.scalars().first()
         account.account_status = "archive"
