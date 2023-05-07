@@ -1,11 +1,13 @@
-import asyncio
+import logging
 
 from aiogram import types
 from aiogram.dispatcher.handler import CancelHandler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
 from src.tgbot_expenses.bot import Bot
-from src.tgbot_expenses.config import Config
+from src.tgbot_expenses.constants import QuestionText
+from src.tgbot_expenses.database.db import database
+from src.tgbot_expenses.services.user_service import get_user_id
 
 
 class AuthorizationMiddleware(BaseMiddleware):
@@ -18,8 +20,8 @@ class AuthorizationMiddleware(BaseMiddleware):
         """
         Check if the message sender is an authorized user.
         If not, send a message indicating that the bot is not
-        available to the user and cancel the message handling.
-
+        available to the user, to authorize, user should send,
+        a message with the text "/init" and cancel the message handling.
         :param message: The message to be processed.
         :type message: types.Message
         :param data: Additional data associated with the message.
@@ -27,20 +29,16 @@ class AuthorizationMiddleware(BaseMiddleware):
         :return: None
         :raises CancelHandler: If the message sender is not an authorized user.
         """
-        config = Config.load_config("bot.ini")
+        await database.create_tables()
+        try:
+            user_id = await get_user_id(message.from_user.id)
+        except Exception as e:
+            logging.error("Failed to retrieve user ID: %s", e)
+            user_id = None
 
-        if str(message.from_user.id) not in [config.ids.id_1, config.ids.id_2]:
-
-            response = await Bot.answer(
-                message=message,
-                text="Sorry, this bot is not available to you 😔"
-            )
-
-            await asyncio.sleep(2)
-
-            await Bot.delete_messages(chat_id=response.chat.id,
-                                      message_id=response.message_id, count=2)
-
+        if message.text.rstrip() != "/init" and user_id is None:
+            await message.delete()
+            await Bot.answer(message=message, text=QuestionText.initialization)
             raise CancelHandler()
 
 

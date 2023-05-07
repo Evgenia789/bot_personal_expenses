@@ -45,7 +45,8 @@ async def message_set_new_limit(message: types.Message,
             current_category = data["current_category"]
 
         await update_monthly_limit(category_name=current_category,
-                                   new_limit=message.text)
+                                   new_limit=message.text,
+                                   telegram_id=message.from_user.id)
 
         last_message = await Bot.answer(
             message=message,

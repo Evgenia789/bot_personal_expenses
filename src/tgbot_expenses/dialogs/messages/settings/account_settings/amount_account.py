@@ -43,7 +43,8 @@ async def message_amount(message: types.Message, state: FSMContext) -> None:
         async with state.proxy() as data:
             account_name = data["account_name"]
             await insert_account(account_name=account_name,
-                                 account_amount=amount)
+                                 account_amount=amount,
+                                 telegram_id=message.from_user.id)
 
         message = await Bot.answer(message=message,
                                    text=f"Account {account_name} added")
