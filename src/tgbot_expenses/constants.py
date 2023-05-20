@@ -31,3 +31,5 @@ class QuestionText:
                   "`Change Category`/ -> `Add Account`/`Add Category`.")
     initialization = ("You should press the /init command "
                       "to start using the bot")
+    constant_message = ("After logging in, you can always click / start to "
+                        "start all over again")
