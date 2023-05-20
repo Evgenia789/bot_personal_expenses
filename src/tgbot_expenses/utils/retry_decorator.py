@@ -21,7 +21,7 @@ def retry(max_retries: int, retry_delay: int) -> Callable:
                 try:
                     return await func(*args, **kwargs)
                 except Exception as e:
-                    logging.error(f"Error getting accounts: {e}")
+                    logging.error(f"Error getting: {e}")
                     if i < max_retries - 1:
                         logging.info(f"Retrying in {retry_delay} seconds...")
                         await asyncio.sleep(retry_delay)
