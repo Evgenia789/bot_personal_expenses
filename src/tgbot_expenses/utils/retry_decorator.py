@@ -23,7 +23,7 @@ def retry(max_retries: int, retry_delay: int) -> Callable:
                 except Exception as e:
                     logging.error(f"Error getting accounts: {e}")
                     if i < max_retries - 1:
-                        logging.info(f"Retrying in {retry_delay} seconds...")
+                        logging.error(f"Error getting: {e}")
                         await asyncio.sleep(retry_delay)
                     else:
                         raise

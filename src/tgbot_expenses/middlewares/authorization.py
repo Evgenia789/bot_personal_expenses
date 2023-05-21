@@ -37,6 +37,8 @@ class AuthorizationMiddleware(BaseMiddleware):
             user_id = None
 
         if message.text.rstrip() != "/init" and user_id is None:
+            await Bot.answer(message=message,
+                             text=QuestionText.constant_message)
             await message.delete()
             await Bot.answer(message=message, text=QuestionText.initialization)
             raise CancelHandler()
